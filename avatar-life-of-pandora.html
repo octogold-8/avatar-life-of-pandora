@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#060B14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Avatar: Life of Pandora">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>Avatar: Life of Pandora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#060B14; --panel:#0E1B2B; --panel2:#122539;
+  --cyan:#48E5C2; --violet:#A16BFF; --amber:#E8A23D; --coral:#FF6B6B;
+  --text:#D8E6E4; --text-dim:#8AA3A0; --accent: var(--cyan);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:#000;}
+body{font-family:'Manrope',sans-serif; color:var(--text); display:flex; justify-content:center; align-items:center; min-height:100vh; overflow:hidden;}
+.display{font-family:'Marcellus',serif;}
+#phone{position:relative; width:420px; max-width:100vw; height:860px; max-height:100vh;
+  background:radial-gradient(ellipse at 50% -10%, #0d2233 0%, var(--void) 55%, #030509 100%);
+  border-radius:38px; overflow:hidden; box-shadow:0 0 0 8px #000, 0 0 60px rgba(72,229,194,0.15), 0 30px 80px rgba(0,0,0,0.6);
+  display:flex; flex-direction:column;}
+#spores{position:absolute; inset:0; pointer-events:none; z-index:1; overflow:hidden;}
+.spore{position:absolute; bottom:-20px; border-radius:50%;
+  background:radial-gradient(circle, rgba(72,229,194,0.95) 0%, rgba(72,229,194,0.15) 60%, transparent 70%);
+  box-shadow:0 0 8px 2px rgba(72,229,194,0.5); animation: floatUp linear infinite;}
+@keyframes floatUp{0%{transform:translate(0,0); opacity:0;}10%{opacity:0.9;}90%{opacity:0.6;}100%{transform:translate(var(--dx),-920px); opacity:0;}}
+#statusbar{height:28px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 22px; font-size:11px; color:var(--text-dim); letter-spacing:1px; z-index:5;}
+#app{position:relative; z-index:4; flex:1; overflow-y:auto; padding:18px 20px 26px; scrollbar-width:none;}
+#app::-webkit-scrollbar{display:none;}
+.eyebrow{font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); opacity:0.85; margin-bottom:6px; font-weight:700;}
+h1.title{font-family:'Marcellus',serif; font-size:34px; line-height:1.1; margin:0 0 4px;
+  background:linear-gradient(120deg, var(--cyan), var(--violet)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.tagline{color:var(--text-dim); font-size:13.5px; margin-bottom:26px; line-height:1.5;}
+.btn{display:block; width:100%; text-align:left; background:var(--panel); border:1px solid rgba(72,229,194,0.18); color:var(--text);
+  padding:16px 18px; border-radius:16px; font-size:15px; font-weight:600; margin-bottom:12px; cursor:pointer; transition:all .18s ease; position:relative; overflow:hidden; font-family:'Manrope',sans-serif;}
+.btn:active{transform:scale(0.98);}
+.btn:hover{border-color:var(--accent); box-shadow:0 0 18px rgba(72,229,194,0.15);}
+.btn .sub{display:block; font-weight:400; font-size:12px; color:var(--text-dim); margin-top:4px;}
+.btn.primary{background:linear-gradient(120deg, rgba(72,229,194,0.18), rgba(161,107,255,0.14)); border-color:var(--accent);}
+.btn.ghost{background:transparent; border:1px solid rgba(216,230,228,0.15);}
+.btn.danger{border-color:rgba(255,107,107,0.4);}
+.btn .pct{float:right; font-size:11px; padding:3px 9px; border-radius:20px; font-weight:800; background:rgba(72,229,194,0.12); color:var(--accent);}
+.card{background:var(--panel); border:1px solid rgba(255,255,255,0.06); border-radius:18px; padding:18px; margin-bottom:16px;}
+#topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+.badge{font-size:11px; letter-spacing:1.5px; text-transform:uppercase; font-weight:800; padding:5px 11px; border-radius:20px; border:1px solid var(--accent); color:var(--accent);}
+.age-display{font-family:'Marcellus',serif; font-size:20px; color:var(--text);}
+.age-display b{color:var(--accent);}
+.stats-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;}
+.stat{background:var(--panel2); border-radius:12px; padding:9px 11px;}
+.stat .lbl{display:flex; justify-content:space-between; font-size:10.5px; color:var(--text-dim); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.5px;}
+.stat .lbl b{color:var(--text);}
+.bar{height:6px; border-radius:4px; background:rgba(255,255,255,0.07); overflow:hidden;}
+.bar i{display:block; height:100%; border-radius:4px; background:linear-gradient(90deg,var(--cyan),var(--violet)); box-shadow:0 0 6px rgba(72,229,194,0.6);}
+.event-text{font-size:15px; line-height:1.65; margin-bottom:18px; color:var(--text);}
+.event-text .stagelabel{display:block; font-family:'Marcellus',serif; font-size:19px; color:var(--accent); margin-bottom:8px;}
+.outcome{border-left:3px solid var(--accent); padding:12px 14px; background:rgba(72,229,194,0.06); border-radius:0 12px 12px 0; margin-bottom:14px; font-size:14px; line-height:1.55;}
+.outcome.fail{border-color:var(--coral); background:rgba(255,107,107,0.07);}
+.deltas{margin-top:8px; display:flex; flex-wrap:wrap; gap:6px;}
+.delta-pill{font-size:11px; padding:3px 8px; border-radius:20px; background:rgba(255,255,255,0.06); font-weight:700;}
+.delta-pill.pos{color:var(--cyan);} .delta-pill.neg{color:var(--coral);} .delta-pill.score{color:var(--amber);}
+.recap{background:var(--panel2); border-radius:14px; padding:12px 14px; margin-bottom:16px;}
+.recap .recap-title{font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent); font-weight:800; margin-bottom:8px;}
+.recap-line{font-size:12.5px; color:var(--text-dim); margin-bottom:4px;}
+.recap-line b{color:var(--text);}
+.recap-stats{font-size:12px; color:var(--text-dim); line-height:1.7;}
+.journal-toggle{font-size:12px; color:var(--text-dim); text-align:center; cursor:pointer; margin:16px 0 4px; letter-spacing:1px; text-transform:uppercase;}
+.journal{display:none; margin-top:8px;} .journal.open{display:block;}
+.journal-entry{font-size:12.5px; color:var(--text-dim); padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);}
+.journal-entry b{color:var(--text);}
+.inputwrap{margin-bottom:18px;}
+.inputwrap label{display:block; font-size:12px; color:var(--text-dim); margin-bottom:6px; text-transform:uppercase; letter-spacing:1px;}
+input[type=text]{width:100%; background:var(--panel2); border:1px solid rgba(255,255,255,0.08); color:var(--text); padding:13px 14px; border-radius:12px; font-size:15px; font-family:'Manrope',sans-serif;}
+input[type=text]:focus{outline:none; border-color:var(--accent);}
+.center{text-align:center;}
+.small{font-size:12px; color:var(--text-dim);}
+.epi-title{font-family:'Marcellus',serif; font-size:26px; color:var(--accent); margin:6px 0 2px;}
+.hr{height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent); margin:18px 0;}
+.mem-card{background:var(--panel); border-radius:14px; padding:14px 16px; margin-bottom:10px; border:1px solid rgba(255,255,255,0.06);}
+.mem-card .name{font-family:'Marcellus',serif; font-size:17px; color:var(--text);}
+.mem-card .meta{font-size:11.5px; color:var(--text-dim); margin-top:2px;}
+.mem-card .del{float:right; color:var(--coral); font-size:11px; cursor:pointer;}
+.mem-card.locked{opacity:0.4;}
+.mem-card .cnt{float:right; font-size:11px; color:var(--accent); font-weight:800;}
+.score-banner{background:linear-gradient(120deg, rgba(232,162,61,0.16), rgba(161,107,255,0.12)); border:1px solid rgba(232,162,61,0.35);
+  border-radius:14px; padding:12px 14px; margin-bottom:16px; text-align:center;}
+.score-banner b{font-family:'Marcellus',serif; font-size:22px; color:var(--amber); display:block;}
+.species-navi{--accent:var(--violet);} .species-humain{--accent:var(--amber);}
+::selection{background:rgba(72,229,194,0.3);}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div id="spores"></div>
+  <div id="statusbar"><span>PANDORA · RSPN-01</span><span id="clock">◐</span></div>
+  <div id="app"></div>
+</div>
+<input type="file" id="importFileInput" accept="application/json,.json" style="display:none" onchange="handleImportFile(this)">
+
+<script>
+/* ============================= DONNÉES DE BASE ============================= */
+
+const STAT_KEYS = ["force","courage","sagesse","harmonie","charme","chance"];
+const STAT_LABELS = {force:"Force", courage:"Courage", sagesse:"Sagesse", harmonie:"Harmonie", charme:"Charme", chance:"Chance"};
+
+const NAVI_NAMES_F = ["Neytiri","Mo'at","Ronal","Tsireya","Sylwanin"];
+const NAVI_NAMES_M = ["Tsu'tey","Eytukan","Tonowari","Aonung","Rotxo"];
+const HUMAN_NAMES_F = ["Grace","Trudy","Frances","Karina"];
+const HUMAN_NAMES_M = ["Jake","Norm","Max","Parker","Miles","Ian","Lyle"];
+const CHILD_NAMES_NAVI = ["Neteyam","Lo'ak","Kiri","Tuk"];
+const CHILD_NAMES_HUMAN = ["Max","Grace","Norm","Ian","Karina"];
+
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function clamp(v){ return Math.max(0, Math.min(100, Math.round(v))); }
+function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function namePool(species, gender){ return species==='navi' ? (gender==='F'?NAVI_NAMES_F:NAVI_NAMES_M) : (gender==='F'?HUMAN_NAMES_F:HUMAN_NAMES_M); }
+/* Le/la partenaire est du genre opposé à celui du joueur. */
+function spousePool(state, spouseSpecies){ return namePool(spouseSpecies, state.gender==='F' ? 'H' : 'F'); }
+function spouseNoun(state){ return state.gender==='F' ? "un mari" : "une femme"; }
+function spouseNounCap(state){ return state.gender==='F' ? "Un mari" : "Une femme"; }
+
+/* Génération combinatoire pour les années calmes : évite quasiment toute répétition
+   de texte au sein d'une même vie (des centaines de combinaisons possibles). */
+const FLAVOR_OPENERS_NAVI = ["Le vent souffle dans les arbres.","La lune de Pandora éclaire la nuit.","Un chant lointain traverse le camp.","Il pleut sur les grandes feuilles, comme souvent.","Le clan vaque à ses occupations habituelles.","Les bioluminescences brillent au sol, ce soir-là.","Une brume traîne autour de l'Arbre-Maison."];
+const FLAVOR_MIDDLES_NAVI = ["Tu passes ton temps entre chasse et repos.","Rien de particulier ne se passe cette année.","Tu apprends encore quelques petites choses, comme d'habitude.","Le quotidien du clan continue, tranquillement.","Tu regardes le monde changer petit à petit.","Les saisons passent, sans grand bruit.","Tu prends soin de toi et des tiens, ce qui n'est déjà pas rien."];
+const FLAVOR_CLOSERS_NAVI = ["Encore une année qui passe.","Il ne se passe rien de marquant, mais tu avances quand même.","Le temps continue son cours, simplement.","Cela te change un peu, sans plus.","La vie continue.","Un souvenir de plus, parmi d'autres.","Il n'y a pas grand-chose à en dire, en réalité."];
+const FLAVOR_OPENERS_HUMAN = ["Les néons de la base clignotent.","Un nouveau mois commence.","La routine reprend sur Pandora.","Les rapports s'entassent sur ton bureau.","Un vaisseau de ravitaillement se pose au loin.","La pluie frappe contre les hublots.","Un message de la Terre met des mois à arriver, comme toujours."];
+const FLAVOR_MIDDLES_HUMAN = ["Tu passes ton temps entre travail et repos.","Rien de particulier ne se passe cette année.","Tu apprends encore quelques petites choses, comme d'habitude.","Le quotidien continue, sans grand bruit.","Tu regardes le monde changer petit à petit.","Les mois passent, tranquillement.","Tu prends soin de toi et des tiens, ce qui n'est déjà pas rien."];
+const FLAVOR_CLOSERS_HUMAN = ["Encore une année loin de la Terre.","Il ne se passe rien de marquant, mais tu avances quand même.","Le temps continue son cours, simplement.","Cela te change un peu, sans plus.","La vie continue.","Un souvenir de plus, parmi d'autres.","Pandora te façonne, doucement."];
+
+function autoFlavor(state){
+  const openers = state.species==='navi'?FLAVOR_OPENERS_NAVI:FLAVOR_OPENERS_HUMAN;
+  const middles = state.species==='navi'?FLAVOR_MIDDLES_NAVI:FLAVOR_MIDDLES_HUMAN;
+  const closers = state.species==='navi'?FLAVOR_CLOSERS_NAVI:FLAVOR_CLOSERS_HUMAN;
+  state.usedFlavors = state.usedFlavors || [];
+  let combo, tries=0;
+  do{ combo = pick(openers)+" "+pick(middles)+" "+pick(closers); tries++; }
+  while(state.usedFlavors.includes(combo) && tries<40);
+  state.usedFlavors.push(combo);
+  return combo;
+}
+
+/* Générateur de secours (générique mais jamais répété dans une même vie) utilisé
+   uniquement quand tous les événements écrits pour une tranche d'âge ont déjà été vus.
+   Plusieurs familles de choix bien distinctes, combinées à des sujets variés,
+   pour qu'aucune "année de secours" ne ressemble jamais vraiment à une autre. */
+const GENERIC_SUBJECTS_NAVI = ["une dispute avec un ami du clan","une corvée fastidieuse","un rêve étrange qui te hante","une nouvelle rencontre inattendue","un défi physique surprenant","une question qui te trotte dans la tête","un moment de doute passager","une petite victoire personnelle","un désaccord avec un proche","une occasion de te distinguer","une nuit d'orage difficile à trouver le sommeil","une blessure légère à soigner","une rumeur qui circule sur toi","un objet mystérieux trouvé en forêt","une invitation à une cérémonie voisine","un souvenir d'enfance qui remonte","une maladresse publique","un signe qui semble venir d'Eywa","une proposition inattendue d'un proche","un silence pesant avec quelqu'un que tu aimes"];
+const GENERIC_SUBJECTS_HUMAN = ["une dispute avec un collègue","une tâche fastidieuse","un rêve étrange qui te hante","une nouvelle rencontre inattendue","un défi physique surprenant","une question qui te trotte dans la tête","un moment de doute passager","une petite victoire personnelle","un désaccord avec un proche","une occasion de te distinguer","une panne de matériel à gérer","une blessure légère à soigner","une rumeur qui circule sur toi","un objet mystérieux retrouvé dans un tiroir","une invitation à un événement de la base","un souvenir d'enfance qui remonte","une maladresse publique","un message énigmatique reçu","une proposition inattendue d'un proche","un silence pesant avec quelqu'un que tu aimes"];
+
+const GENERIC_TEMPLATES = [
+  (subj)=>({title:"Une année particulière", text:s=>`Cette année-là, ${subj} occupe l'esprit de ${s.name}.`,
+    choices:[
+      {label:"Foncer sans hésiter", chance:65, chanceStat:'courage',
+       success:{text:"Ton audace paie, cette fois.", deltas:{courage:4,chance:1}},
+       fail:{text:"Ça ne se passe pas comme prévu, mais tu en tires une leçon.", deltas:{courage:-1,sagesse:1}}},
+      {label:"Réfléchir soigneusement avant d'agir", success:{text:"Ta prudence porte ses fruits.", deltas:{sagesse:4}}},
+      {label:"Chercher du soutien auprès des autres", success:{text:"Tu n'affrontes pas ça seul(e).", deltas:{charme:4}}},
+      {label:"Laisser le temps faire les choses", success:{text:"Parfois, il suffit d'attendre un peu.", deltas:{harmonie:4}}},
+    ]}),
+  (subj)=>({title:"Un choix à faire", text:s=>`${s.name} se retrouve confronté(e) à ${subj}, et doit trancher.`,
+    choices:[
+      {label:"Confronter la situation directement", chance:55, chanceStat:'courage',
+       success:{text:"Ta franchise désamorce les choses.", deltas:{courage:3,charme:2}},
+       fail:{text:"Ça envenime un peu les choses, mais tu assumes.", deltas:{harmonie:-2,sagesse:1}}},
+      {label:"Éviter soigneusement le sujet", success:{text:"Tu préfères ne pas t'en mêler pour l'instant.", deltas:{chance:2}}},
+      {label:"Négocier un compromis raisonnable", success:{text:"Un terrain d'entente se dessine.", deltas:{sagesse:3,charme:2}}},
+      {label:"Repousser la décision à plus tard", success:{text:"Tu te donnes le temps d'y réfléchir.", deltas:{sagesse:2}}},
+    ]}),
+  (subj)=>({title:"Une question de priorités", text:s=>`Avec ${subj}, ${s.name} doit décider où porter son énergie.`,
+    choices:[
+      {label:"Investir sur toi-même", success:{text:"Tu progresses discrètement, mais sûrement.", deltas:{sagesse:3,force:2}}},
+      {label:"Investir dans tes proches", success:{text:"Vos liens se renforcent.", deltas:{harmonie:3,charme:2}}},
+      {label:"Investir dans ton travail ou ton rôle", success:{text:"Ton engagement est remarqué.", deltas:{chance:3}, reputationDelta:2}},
+      {label:"Ne rien changer à tes habitudes", success:{text:"Tu restes fidèle à ta routine.", deltas:{harmonie:2}}},
+    ]}),
+  (subj)=>({title:"Un pari à prendre ou pas", text:s=>`${subj} met ${s.name} face à un vrai dilemme.`,
+    choices:[
+      {label:"Tout risquer pour en avoir le cœur net", chance:45, chanceStat:'chance',
+       success:{text:"Le risque était calculé, et ça paie.", deltas:{chance:6}},
+       fail:{text:"Le pari échoue, mais tu ne regrettes pas d'avoir essayé.", deltas:{chance:-3,sagesse:2}}},
+      {label:"Jouer la carte de la prudence", success:{text:"Tu avances pas à pas, sans surprise.", deltas:{sagesse:3}}},
+      {label:"Demander l'avis de quelqu'un de confiance", success:{text:"Un regard extérieur t'aide à y voir clair.", deltas:{charme:3}}},
+      {label:"Suivre ton instinct, sans trop réfléchir", success:{text:"Tu te fies à ce que tu ressens.", deltas:{courage:3}}},
+    ]}),
+  (subj)=>({title:"Accepter ou refuser", text:s=>`Face à ${subj}, on demande à ${s.name} de se positionner clairement.`,
+    choices:[
+      {label:"Accepter pleinement", success:{text:"Tu t'engages sans réserve.", deltas:{courage:3,charme:1}}},
+      {label:"Refuser fermement", success:{text:"Tu assumes ton choix, quitte à déplaire.", deltas:{sagesse:2}, reputationDelta:-1}},
+      {label:"Proposer une alternative à mi-chemin", success:{text:"Ta solution surprend, mais convainc.", deltas:{sagesse:2,charme:2}}},
+      {label:"Demander un délai de réflexion", success:{text:"Personne ne t'en tient rigueur.", deltas:{sagesse:2}}},
+    ]}),
+  (subj)=>({title:"Un moment à vivre pleinement", text:s=>`${subj} devient, pour ${s.name}, l'occasion de se recentrer.`,
+    choices:[
+      {label:"T'y plonger corps et âme", success:{text:"Tu en ressors transformé(e), même un peu.", deltas:{harmonie:3,courage:2}}},
+      {label:"Garder une distance raisonnable", success:{text:"Tu observes sans t'impliquer à fond.", deltas:{sagesse:3}}},
+      {label:"En faire un moment de partage", success:{text:"Tu ne vis pas ça seul(e).", deltas:{charme:3,harmonie:1}}},
+      {label:"En tirer une leçon discrète", success:{text:"Tu notes ce que ça t'apprend sur toi-même.", deltas:{sagesse:2,chance:1}}},
+    ]}),
+  (subj)=>({title:"Un secret à garder ou révéler", text:s=>`${subj} met ${s.name} dans la confidence de quelque chose de délicat.`,
+    choices:[
+      {label:"Garder ce secret pour toi", success:{text:"Tu apprends à porter ce poids seul(e).", deltas:{sagesse:3}}},
+      {label:"Le révéler à un proche de confiance", success:{text:"Le partager t'allège beaucoup.", deltas:{charme:3,harmonie:1}}},
+      {label:"Le révéler publiquement", chance:45, chanceStat:'courage',
+       success:{text:"La vérité, une fois dite, libère tout le monde.", deltas:{courage:4}, reputationDelta:3},
+       fail:{text:"Ça crée plus de remous que prévu.", reputationDelta:-3, deltas:{sagesse:1}}},
+      {label:"T'en défaire autrement, sans le dire à personne", success:{text:"Tu trouves ta propre façon d'avancer.", deltas:{chance:2}}},
+    ]}),
+  (subj)=>({title:"Le poids d'une routine", text:s=>`${subj} pousse ${s.name} à interroger ses habitudes.`,
+    choices:[
+      {label:"Tout changer radicalement", chance:45, chanceStat:'courage',
+       success:{text:"Ce grand changement te fait un bien fou.", deltas:{courage:4,chance:2}},
+       fail:{text:"Le changement est plus difficile que prévu à tenir.", deltas:{courage:-1,sagesse:2}}},
+      {label:"Ajuster légèrement tes habitudes", success:{text:"De petits ajustements suffisent amplement.", deltas:{sagesse:3}}},
+      {label:"Ne rien changer du tout", success:{text:"Tu restes fidèle à ce qui fonctionne déjà.", deltas:{harmonie:2}}},
+      {label:"En discuter avec quelqu'un de proche", success:{text:"Ce regard extérieur t'éclaire.", deltas:{charme:3}}},
+    ]}),
+  (subj)=>({title:"Une aide à apporter ou pas", text:s=>`${subj} place ${s.name} devant une demande d'aide.`,
+    choices:[
+      {label:"Aider sans compter ton temps", success:{text:"Ton dévouement est remarqué et apprécié.", deltas:{charme:3,harmonie:1}}, reputationDelta:2},
+      {label:"Aider, mais avec mesure", success:{text:"Un juste équilibre entre don et préservation de soi.", deltas:{sagesse:3}}},
+      {label:"Décliner poliment cette fois", success:{text:"Tu as aussi le droit de dire non.", deltas:{sagesse:2}}},
+      {label:"Trouver quelqu'un d'autre pour aider à ta place", success:{text:"Ta solution satisfait tout le monde.", deltas:{charme:2,chance:1}}},
+    ]}),
+  (subj)=>({title:"Un héritage à transmettre", text:s=>`${subj} amène ${s.name} à réfléchir à ce qu'il/elle laissera derrière lui/elle.`,
+    choices:[
+      {label:"Transmettre dès maintenant, sans attendre", success:{text:"Un geste généreux, salué de tous.", deltas:{charme:3}, reputationDelta:3}},
+      {label:"Attendre le bon moment", success:{text:"Tu préfères ne pas te précipiter.", deltas:{sagesse:3}}},
+      {label:"Transmettre à quelqu'un d'inattendu", success:{text:"Ton choix surprend, mais fait sens avec le recul.", deltas:{chance:3,charme:1}}},
+      {label:"Garder cela pour toi, encore un peu", success:{text:"Rien ne presse vraiment.", deltas:{sagesse:2}}},
+    ]}),
+  (subj)=>({title:"Une émotion à apprivoiser", text:s=>`${subj} réveille chez ${s.name} une émotion difficile à ignorer.`,
+    choices:[
+      {label:"L'exprimer ouvertement", success:{text:"Le dire à voix haute t'apaise beaucoup.", deltas:{courage:2,charme:2}}},
+      {label:"La garder pour toi, en silence", success:{text:"Tu apprends à vivre avec, à ta façon.", deltas:{sagesse:3}}},
+      {label:"La canaliser dans une activité", success:{text:"Ton énergie trouve un exutoire sain.", deltas:{force:2,sagesse:1}}},
+      {label:"En discuter avec un proche", success:{text:"Ce n'est pas facile, mais ça fait du bien.", deltas:{charme:3}}},
+    ]}),
+  (subj)=>({title:"Le regard des autres", text:s=>`${subj} met ${s.name} face au jugement, réel ou imaginé, de son entourage.`,
+    choices:[
+      {label:"Ignorer complètement ce qu'on pense de toi", success:{text:"Une vraie liberté s'installe en toi.", deltas:{courage:3}}},
+      {label:"Chercher à convaincre les sceptiques", chance:50, chanceStat:'charme',
+       success:{text:"Tu parviens à changer certains regards.", deltas:{charme:5}, reputationDelta:3},
+       fail:{text:"Rien n'y fait, certains restent sur leurs positions.", deltas:{charme:-1}}},
+      {label:"T'adapter un peu, sans te trahir", success:{text:"Un compromis qui te convient.", deltas:{sagesse:3}}},
+      {label:"Assumer pleinement qui tu es", success:{text:"Cette affirmation de toi-même est libératrice.", deltas:{courage:2,harmonie:2}}},
+    ]}),
+  (subj)=>({title:"Un rythme à choisir", text:s=>`Avec ${subj}, ${s.name} sent qu'il faut choisir son propre tempo.`,
+    choices:[
+      {label:"Accélérer le pas", success:{text:"Tu avances vite, porté(e) par l'élan.", deltas:{courage:3,force:1}}},
+      {label:"Ralentir volontairement", success:{text:"Tu prends le temps de savourer chaque instant.", deltas:{harmonie:3}}},
+      {label:"Suivre le rythme des autres", success:{text:"Tu te fonds dans le mouvement collectif.", deltas:{charme:2,chance:1}}},
+      {label:"Trouver ton propre tempo, à l'écart des autres", success:{text:"Tu t'affranchis des attentes extérieures.", deltas:{sagesse:3}}},
+    ]}),
+  (subj)=>({title:"Une porte qui s'ouvre", text:s=>`${subj} ouvre à ${s.name} une possibilité inattendue.`,
+    choices:[
+      {label:"La franchir sans hésiter", chance:55, chanceStat:'chance',
+       success:{text:"Cette porte menait exactement où il fallait.", deltas:{chance:5}},
+       fail:{text:"Ce n'était finalement pas la bonne direction.", deltas:{chance:-2,sagesse:2}}},
+      {label:"L'observer avant d'entrer", success:{text:"Ta prudence te permet d'y voir plus clair.", deltas:{sagesse:3}}},
+      {label:"La refermer doucement", success:{text:"Tu choisis de rester où tu es, sereinement.", deltas:{harmonie:2}}},
+      {label:"Demander à quelqu'un de la franchir avec toi", success:{text:"Ne pas être seul(e) change tout.", deltas:{charme:3}}},
+    ]}),
+  (subj)=>({title:"Un vieux rêve resurgit", text:s=>`${subj} ravive chez ${s.name} un rêve mis de côté depuis longtemps.`,
+    choices:[
+      {label:"Le poursuivre enfin, sans plus attendre", chance:50, chanceStat:'courage',
+       success:{text:"Tu es fier(ère) d'avoir enfin tenté.", deltas:{courage:4}, reputationDelta:2},
+       fail:{text:"Ce n'était peut-être plus le bon moment.", deltas:{courage:-1,sagesse:2}}},
+      {label:"Le laisser filer, en paix", success:{text:"Tu fais le deuil de ce rêve, sans amertume.", deltas:{sagesse:3}}},
+      {label:"L'adapter à ta vie actuelle", success:{text:"Une version plus modeste, mais tout aussi belle.", deltas:{sagesse:2,charme:2}}},
+      {label:"Le partager avec quelqu'un de proche", success:{text:"Le dire à voix haute lui donne une nouvelle vie.", deltas:{charme:3}}},
+    ]}),
+  (subj)=>({title:"Une question de confiance", text:s=>`${subj} pousse ${s.name} à se demander en qui il/elle peut vraiment se fier.`,
+    choices:[
+      {label:"Faire confiance sans réserve", chance:55, chanceStat:'charme',
+       success:{text:"Cette confiance placée est amplement récompensée.", deltas:{charme:4,harmonie:2}},
+       fail:{text:"Cette confiance était mal placée, cette fois.", deltas:{harmonie:-2,sagesse:2}}},
+      {label:"Rester sur tes gardes", success:{text:"Ta prudence t'évite bien des soucis.", deltas:{sagesse:3}}},
+      {label:"Tester la situation prudemment d'abord", success:{text:"Une approche mesurée qui porte ses fruits.", deltas:{sagesse:2,chance:2}}},
+      {label:"Demander conseil avant de trancher", success:{text:"Un avis extérieur t'aide à décider.", deltas:{charme:2,sagesse:1}}},
+    ]}),
+];
+
+function genericYearStage(state, age, bracket){
+  bracket = bracket || 'adulte';
+  const subjects = state.species==='navi'?GENERIC_SUBJECTS_NAVI:GENERIC_SUBJECTS_HUMAN;
+  state.usedSubjects = state.usedSubjects || {};
+  state.usedSubjects[bracket] = state.usedSubjects[bracket] || [];
+  let availSubj = subjects.filter(s=>!state.usedSubjects[bracket].includes(s));
+  const subj = availSubj.length ? pick(availSubj) : pick(subjects);
+  state.usedSubjects[bracket].push(subj);
+
+  state.usedTemplates = state.usedTemplates || {};
+  state.usedTemplates[bracket] = state.usedTemplates[bracket] || [];
+  let availTpl = GENERIC_TEMPLATES.map((fn,i)=>i).filter(i=>!state.usedTemplates[bracket].includes(i));
+  const tplIndex = availTpl.length ? pick(availTpl) : pick(GENERIC_TEMPLATES.map((fn,i)=>i));
+  state.usedTemplates[bracket].push(tplIndex);
+  if(state.usedTemplates[bracket].length >= GENERIC_TEMPLATES.length){ state.usedTemplates[bracket] = []; }
+
+  const built = GENERIC_TEMPLATES[tplIndex](subj);
+  return {id:'gen_'+age, age, tier:'filler', title:built.title, text:built.text, choices:built.choices};
+}
+
+
+/* ============================= DURÉES ============================= */
+
+const LENGTHS = [
+  {id:'court', label:'Court', time:'≈ 5 min', desc:"Seulement les grands moments d'une vie, sans détour."},
+  {id:'moyen', label:'Moyen', time:'≈ 15 min', desc:"Chaque année compte, mais les années calmes passent rapidement."},
+  {id:'normal', label:'Normal', time:'≈ 20 min', desc:"Davantage d'événements à vivre pour de vrai."},
+  {id:'long', label:'Long', time:'≈ 40 min', desc:"Une vie bien remplie, avec un vrai choix presque à chaque fois."},
+  {id:'immersif', label:'Immersif', time:'≈ 1 h', desc:"Toutes les années, sans exception. Il faut prévoir du temps."},
+];
+
+/* ============================= MOTEUR ============================= */
+
+function newState(){
+  return {
+    id: 'life_'+Date.now()+"_"+Math.floor(Math.random()*9999),
+    name:"", gender:'H', species:"humain", originSpecies:"humain", path:null, tier:'normal',
+    age:0, maxAge:80,
+    stats:{force:35,courage:35,sagesse:35,harmonie:35,charme:35,chance:35},
+    reputation:0, score:0, flags:{},
+    family:{married:false, spouseName:null, spouseSpecies:null, children:[]},
+    history:[], alive:true, deathText:null,
+    usedFlavors:[], usedSubjects:[],
+    scriptPos:0, script:[]
+  };
+}
+
+/* Espérance de vie : évolue en fonction des choix (dangers affrontés, sagesse et harmonie
+   accumulées...), toujours bornée pour rester crédible. */
+function adjustLifespan(state, delta){
+  const baseline = state.species==='navi' ? 92 : 80;
+  const ceiling = baseline + 15;
+  const floor = Math.max(state.age+2, 30);
+  state.maxAge = Math.max(floor, Math.min(state.maxAge+delta, ceiling));
+}
+
+/* Les 3 voies : chaque personnage penche vers l'une d'elles une fois son "métier" choisi.
+   Progresser dans les stats de sa propre voie est plus facile ; progresser ailleurs, plus dur. */
+const ARCHETYPE_STATS = {
+  force: ['force','courage'],
+  sagesse: ['sagesse','harmonie'],
+  chance: ['charme','chance'],
+};
+
+/* Une chute, un combat, un effort physique risqué : plus la force et le courage sont bas,
+   plus le danger de mort qui en découle est réel. */
+function deathChanceMultiplier(state, chanceStat){
+  if(chanceStat!=='force' && chanceStat!=='courage') return 1;
+  const avg = (state.stats.force + state.stats.courage) / 2;
+  if(avg<=15) return 3.5;
+  if(avg<=30) return 2.5;
+  if(avg<=45) return 1.6;
+  if(avg<=60) return 1;
+  if(avg<=75) return 0.6;
+  return 0.35;
+}
+
+function applyOutcome(state, outc, hadRisk, success, chanceStat){
+  if(!outc) return;
+  let scoreGain = 0;
+  if(outc.deltas){
+    for(const k in outc.deltas){
+      let d = outc.deltas[k];
+      if(d>0){
+        if(k==='sagesse'){
+          /* La sagesse est de plus en plus difficile à gagner à mesure qu'elle est déjà élevée
+             (retours décroissants), pour éviter qu'elle grimpe sans effort. */
+          const cur = state.stats.sagesse;
+          const factor = cur>=80 ? 0.25 : cur>=60 ? 0.45 : cur>=40 ? 0.7 : 1;
+          d = d*factor;
+        }
+        if(state.flags.archetype){
+          /* Dans sa propre voie, les progrès viennent plus vite ; ailleurs, ils coûtent plus cher. */
+          const primary = ARCHETYPE_STATS[state.flags.archetype] || [];
+          d = d * (primary.includes(k) ? 1.3 : 0.6);
+        }
+        d = Math.round(d);
+      }
+      state.stats[k]=clamp(state.stats[k]+d);
+      scoreGain += d;
+    }
+    if((outc.deltas.harmonie||0)>=6 || (outc.deltas.sagesse||0)>=6) adjustLifespan(state, 1);
+    if((outc.deltas.force||0)<=-4 || (outc.deltas.courage||0)<=-4) adjustLifespan(state, -1);
+  }
+  if(outc.reputationDelta){ state.reputation += outc.reputationDelta; scoreGain += outc.reputationDelta*2; }
+  const fam = typeof outc.family==='function' ? outc.family(state) : outc.family;
+  if(fam) Object.assign(state.family, fam);
+  const fl = typeof outc.flags==='function' ? outc.flags(state) : outc.flags;
+  if(fl){
+    Object.assign(state.flags, fl);
+    if(fl.chef) scoreGain += 50;
+    if(fl.tsahik) scoreGain += 50;
+    if(fl.ikranEpique) scoreGain += 40;
+    if(fl.deserteur) scoreGain += 25;
+    if(fl.paixLocale) scoreGain += 25;
+  }
+  if(outc.becomeNavi){
+    state.species='navi';
+    adjustLifespan(state, 10);
+    state.flags.devenuNavi=true;
+    state.flags.devenuNaviDecided=true;
+    state.flags.origine = "Adopté(e) du Peuple";
+    state.flags.clanName = "le Peuple";
+    state.needsNaviRebuild = true;
+    scoreGain += 40;
+  }
+  if(hadRisk){
+    scoreGain += 5;
+    adjustLifespan(state, -1);
+    /* Se lancer dans une action risquée (pas une démarche réfléchie) et échouer coûte
+       un peu de sagesse : c'est la seule vraie façon d'en perdre. */
+    if(success===false && chanceStat && chanceStat!=='sagesse'){
+      const loss = randInt(1,3);
+      state.stats.sagesse = clamp(state.stats.sagesse - loss);
+      scoreGain -= loss;
+    }
+  }
+  state.score = Math.round((state.score||0) + scoreGain);
+  if(outc.deathChance){
+    const effectiveDeathChance = Math.min(65, outc.deathChance * deathChanceMultiplier(state, chanceStat));
+    if(Math.random()*100 < effectiveDeathChance){
+      state.alive = false;
+      state.deathText = outc.deathText || "La vie s'achève ici, brutalement.";
+    }
+  }
+}
+
+function pushHistory(state, text){ state.history.push({age:state.age, text}); }
+
+/* CORRECTIF : un échec ne doit JAMAIS appliquer les effets d'une réussite.
+   Sans "fail" explicite, on retombe sur un résultat neutre mais jamais nul (chaque choix compte). */
+function resolveChoice(state, stage, choice){
+  let success = true;
+  const hadRisk = choice.chance != null;
+  if(hadRisk){
+    let ch = choice.chance;
+    /* Les statistiques influencent vraiment la probabilité de réussite : plus la stat
+       liée au choix est haute, plus les chances de réussir grimpent (et inversement). */
+    if(choice.chanceStat){ ch += (state.stats[choice.chanceStat]-50)*0.5; }
+    ch = Math.max(5, Math.min(96, ch));
+    success = Math.random()*100 < ch;
+  }
+  let outc;
+  if(success){ outc = choice.success; }
+  else { outc = choice.fail || {text:"Cette tentative échoue, sans grande conséquence directe.", deltas:{}}; }
+  applyOutcome(state, outc, hadRisk, hadRisk?success:null, choice.chanceStat);
+  const text = (typeof outc.text === 'function') ? outc.text(state) : outc.text;
+  pushHistory(state, (typeof choice.label==='function'?choice.label(state):choice.label) + " — " + text);
+  return {success, text, deltas:outc.deltas||{}, reputationDelta:outc.reputationDelta||0, dead: !state.alive, deathText: state.deathText};
+}
+
+function getChoices(stage, state){ return typeof stage.choices==='function' ? stage.choices(state) : stage.choices; }
+function markMilestones(arr){ return arr.map(s=>Object.assign({}, s, {milestone:true})); }
+
+/* ============================= CONTENU : NA'VI (tronc) ============================= */
+
+function buildNaviTrunk(){
+  return markMilestones([
+  {id:'n1', age:6, title:"Premiers pas dans la forêt",
+    text:s=>`Enfant du clan ${s.flags.clanName||"Omatikaya"}, ${s.name} découvre la Forêt de Grâce. Les Anciens observent déjà quel chemin il ou elle empruntera.`,
+    choices:[
+      {label:"Suivre les chasseurs en forêt", success:{text:"Tu apprends vite à lire les traces et à te taire dans les fougères.", deltas:{force:6,courage:5}}},
+      {label:"Rester auprès de la Tsahìk à apprendre les chants", success:{text:"Les mélodies sacrées et les récits d'Eywa s'ancrent en toi.", deltas:{sagesse:6,harmonie:5}}},
+      {label:"Explorer seul(e) les zones interdites", chance:35, chanceStat:'chance',
+       success:{text:"Tu découvres une clairière sacrée que peu ont vue. Le clan s'étonne de ta trouvaille.", deltas:{chance:7,harmonie:4}, reputationDelta:5},
+       fail:{text:"Tu te perds plusieurs heures et es retrouvé(e) effrayé(e) par les chasseurs.", deltas:{harmonie:-3}, reputationDelta:-2}},
+      {label:"Rester près du foyer, à observer les Anciens travailler", success:{text:"Tu apprends en silence, les yeux grands ouverts.", deltas:{sagesse:3,charme:3}}},
+    ]},
+  {id:'n2', age:12, title:"La voie choisie",
+    text:s=>`${s.name} doit choisir sa formation d'adolescent. Ce choix orientera durablement ce qui lui viendra facilement, ou non.`,
+    choices:[
+      {label:"Formation de guerrier", success:{text:"Ton corps se durcit, ton arc devient une extension de ton bras. Cette voie te rendra plus fort(e) et plus courageux(se) plus vite, mais le reste te demandera davantage d'efforts.", deltas:{force:8,courage:6}, flags:{formation:'guerrier', archetype:'force', archetypeLabel:'Guerrier(ère)'}}},
+      {label:"Formation de tisseuse de liens (spirituelle)", success:{text:"Tu ressens le pouls des racines sous tes pieds, plus fort chaque jour. Cette voie te rendra plus sage et plus en harmonie plus vite, mais le reste te demandera davantage d'efforts.", deltas:{harmonie:8,sagesse:6}, flags:{formation:'tisseur', archetype:'sagesse', archetypeLabel:'Tisseuse de liens'}}},
+      {label:"Formation d'artisan", success:{text:"Tes mains savent façonner l'arc, la sagaie, la perle. Cette voie te rendra plus charismatique et plus chanceux(se) plus vite, mais le reste te demandera davantage d'efforts.", deltas:{charme:5,chance:5}, flags:{formation:'artisan', archetype:'chance', archetypeLabel:'Artisan(e)'}}},
+      {label:"Formation de chanteur d'appel (Ikran et créatures du ciel)", success:{text:"Ta voix porte loin, et les créatures du ciel semblent l'entendre. Cette voie te rendra plus charismatique et plus chanceux(se) plus vite, mais le reste te demandera davantage d'efforts.", deltas:{charme:6,harmonie:4}, flags:{formation:'chanteur', archetype:'chance', archetypeLabel:"Chanteur(se) d'appel"}}},
+    ]},
+  {id:'n3', age:16, title:"Le jour de l'Ikran",
+    text:s=>`Le jour tant attendu est arrivé : ${s.name} doit choisir et dompter son Ikran, sous le regard de tout le clan.`,
+    choices:[
+      {label:"Showman — un combat impressionnant pour dompter l'Ikran", chance:10, chanceStat:'courage',
+       success:{text:"Dans un cri retentissant, tu maîtrises un Ikran rare et farouche. Le clan entier scande ton nom.", deltas:{courage:16,force:8}, reputationDelta:25, flags:{ikranEpique:true}},
+       fail:{text:"L'Ikran te rejette violemment. Tu chutes devant tout le clan, blessé dans ta chair et ta fierté.", deltas:{courage:-4,force:-4}, reputationDelta:-8, deathChance:4, deathText:"Tu tombes des hauteurs de l'Arbre des Âmes.", flags:{sansMonture:true}}},
+      {label:"Prudent — y aller doucement, étape par étape", chance:80, chanceStat:'sagesse',
+       success:{text:"Patiemment, tu gagnes la confiance d'un Ikran loyal. Le lien se noue sans éclat, mais solidement.", deltas:{harmonie:6,courage:3}, reputationDelta:6},
+       fail:{text:"Même prudent, l'Ikran refuse le lien aujourd'hui. Tu devras retenter ta chance plus tard.", deltas:{harmonie:-2,sagesse:2}, flags:{sansMonture:true}}},
+    ]},
+  {id:'n4', age:22, title:"Tsaheylu du cœur",
+    text:s=>`${s.name} atteint l'âge des unions. Le lien, tsaheylu, peut se tisser avec un être cher.`,
+    choices:[
+      {label:s=>`Chercher ${spouseNoun(s)} dans le clan`, chance:72, chanceStat:'charme',
+       success:{text:"Un lien profond se noue entre vous deux natifs de la même forêt.", family:s=>({married:true, spouseName:pick(spousePool(s,'navi')), spouseSpecies:'navi'}), deltas:{harmonie:6,charme:4}, flags:{seekingLove:true}},
+       fail:{text:"Le lien espéré ne se fait pas cette année. Tu restes seul(e), pour l'instant.", deltas:{charme:-2}, flags:{seekingLove:true}}},
+      {label:"Rester libre, dévoué(e) au clan plutôt qu'à un partenaire", success:{text:"Tu consacres ton énergie au Peuple plutôt qu'à une union.", deltas:{sagesse:5}, reputationDelta:4, flags:{seekingLove:false}}},
+      {label:s=>`Courtiser un membre d'un clan voisin`, chance:55, chanceStat:'charme',
+       success:{text:"Une alliance naît entre deux clans, scellée par votre union.", family:s=>({married:true, spouseName:pick(spousePool(s,'navi')), spouseSpecies:'navi'}), deltas:{harmonie:5,charme:5}, reputationDelta:6, flags:{seekingLove:true}},
+       fail:{text:"Le clan voisin décline poliment cette union.", deltas:{charme:-3}, reputationDelta:-2, flags:{seekingLove:true}}},
+      {label:"Repousser toute idée d'union, pas encore prêt(e)", success:{text:"Tu prends ton temps, sans pression.", deltas:{sagesse:3,chance:2}, flags:{seekingLove:true}}},
+    ]},
+  {id:'n6', age:35, title:"L'ombre du ciel-de-fer",
+    text:s=>`Les hommes du ciel reviennent creuser la terre sacrée. Le clan doit répondre.`,
+    choices:[
+      {label:"Prendre les armes et défendre la Forêt-Mère", chance:45, chanceStat:'force',
+       success:{text:"Ton courage rallie les guerriers. Une victoire amère, mais réelle.", deltas:{force:10,courage:8}, reputationDelta:20, deathChance:6, deathText:"Tu tombes au combat, en défendant Eywa."},
+       fail:{text:"La bataille est rude ; tu en reviens marqué(e), mais vivant(e).", deltas:{force:2,harmonie:-4}, reputationDelta:5, deathChance:10, deathText:"Tu tombes au combat, en défendant Eywa."}},
+      {label:"Chercher une voie de négociation et de sagesse", success:{text:"Tes mots pèsent dans le conseil du clan, même sans victoire éclatante.", deltas:{sagesse:9,harmonie:4}, reputationDelta:8}},
+      {label:"Protéger ta famille et rester à l'écart du conflit", success:{text:"Tu choisis les tiens plutôt que la gloire. Certains t'en jugent, d'autres te comprennent.", deltas:{charme:4,harmonie:2}, reputationDelta:-4}},
+      {label:"Espionner discrètement les humains pour le clan", chance:50, chanceStat:'sagesse',
+       success:{text:"Les informations que tu ramènes sauvent des vies dans le clan.", deltas:{sagesse:8}, reputationDelta:10},
+       fail:{text:"Tu es repéré(e) et capturé(e) brièvement avant de t'échapper.", deltas:{harmonie:-3}, reputationDelta:-6, deathChance:5}},
+    ]},
+  {id:'n7', age:55, title:"La voix des Anciens",
+    text:s=>`${s.name} approche l'âge de la sagesse. Le clan a besoin de guides.`,
+    choices:[
+      {label:"Accepter le rôle d'Olo'eyktan (chef de clan)", chance:35, chanceStat:'sagesse',
+       success:{text:"Tu deviens le chef écouté et respecté de ton peuple.", deltas:{sagesse:8,courage:4}, reputationDelta:22, flags:{chef:true}},
+       fail:{text:"Le conseil préfère un autre. Tu restes un ancien respecté, sans le titre.", deltas:{sagesse:4}, reputationDelta:4}},
+      {label:"Devenir Tsahìk, gardien(ne) spirituel(le) du lien avec Eywa", chance:40, chanceStat:'harmonie',
+       success:{text:"Eywa te choisit comme voix spirituelle du clan.", deltas:{harmonie:10,sagesse:6}, reputationDelta:20, flags:{tsahik:true}},
+       fail:{text:"Le lien espéré reste incomplet, mais ta dévotion inspire les jeunes.", deltas:{harmonie:4}}},
+      {label:"Transmettre ton savoir aux jeunes, sans chercher de titre", success:{text:"Des générations de chasseurs et de tisseurs porteront ton enseignement.", deltas:{sagesse:7,charme:3}, reputationDelta:10}},
+      {label:"Te retirer en solitaire, en communion avec Eywa", success:{text:"Tu choisis le silence de la forêt profonde plutôt que les responsabilités.", deltas:{harmonie:10,sagesse:4}, reputationDelta:2, flags:{ermite:true}}},
+    ]},
+  familyStage('n5', 27, 'navi'),
+  ]);
+}
+
+/* Étape famille : totalement conditionnée au mariage — impossible d'avoir des enfants seul(e). */
+function familyStage(id, age, defaultSpeciesLabel){
+  return {id, age, milestone:true,
+    title: "Un foyer, une lignée",
+    text: s => s.family.married
+      ? `${s.name} et ${s.family.spouseName} envisagent une famille.`
+      : `${s.name} n'a personne avec qui fonder un foyer pour l'instant.`,
+    choices: s => s.family.married ? [
+      {label:"Fonder une famille nombreuse (3 enfants)", success:{text:"Trois jeunes voix résonnent bientôt sous votre toit.", family:{children:['@AUTO3']}, deltas:{harmonie:5,charme:3}}},
+      {label:"Avoir un seul enfant", success:{text:"Un enfant unique grandit, choyé et déjà curieux du monde.", family:{children:['@AUTO1']}, deltas:{sagesse:4}}},
+      {label:"Ne pas avoir d'enfant, vous consacrer l'un à l'autre", success:{text:"Vous choisissez une vie à deux, sans enfants.", deltas:{sagesse:6,charme:3}}},
+      {label:"Adopter un enfant qui n'a personne", success:{text:"Un enfant sans famille trouve enfin un foyer auprès de vous.", family:{children:['@AUTO1']}, deltas:{harmonie:6}, reputationDelta:5}},
+    ] : [
+      {label:"Continuer à chercher l'amour", success:{text:"Tu ne perds pas espoir de trouver la bonne personne.", deltas:{charme:2}, flags:{seekingLove:true}}},
+      {label:"Te consacrer entièrement à ta formation", success:{text:"Tu canalises ton énergie dans ton perfectionnement.", deltas:{sagesse:5}}},
+      {label:"Passer du temps avec ta famille et tes proches", success:{text:"Les liens que tu as déjà se resserrent.", deltas:{harmonie:4}}},
+      {label:"Accepter cette solitude, au moins pour l'instant", success:{text:"Tu fais la paix avec cette période de ta vie.", deltas:{sagesse:3}}},
+    ]
+  };
+}
+
+/* ============================= CONTENU : HUMAIN — TRONC COMMUN ============================= */
+
+function buildHumanCommon(){
+  return markMilestones([
+  {id:'h1', age:8, title:"Une enfance sur Terre… ou déjà sous les étoiles",
+    text:s=>`${s.name} grandit, bercé(e) par les récits de Pandora que diffusent les nouvelles.`,
+    choices:[
+      {label:"Dévorer les livres sur Pandora et ses mystères", success:{text:"Ton esprit se nourrit de récits d'un monde lointain et sauvage.", deltas:{sagesse:6,harmonie:4}}},
+      {label:"Passer ton temps à faire du sport et te dépasser", success:{text:"Ton corps devient robuste, ta discipline aussi.", deltas:{force:6,courage:5}}},
+      {label:"Passer ton temps devant les hologrammes et jeux", success:{text:"Tu développes des réflexes redoutables, pour ce que ça vaut.", deltas:{chance:4,charme:3}}},
+      {label:"Aider ta famille dans les tâches quotidiennes", success:{text:"Le sens du devoir s'installe tôt en toi.", deltas:{sagesse:4,courage:2}}},
+    ]},
+  {id:'h2', age:14, title:"Rêves d'adolescent",
+    text:s=>`${s.name} commence à imaginer son avenir.`,
+    choices:[
+      {label:"Rêver de rejoindre le Programme Avatar", success:{text:"Tu dévores tout ce qui touche à la science et aux Na'vis.", deltas:{sagesse:5,harmonie:5}, flags:{interet:'avatar'}}},
+      {label:"Rêver de devenir un soldat d'élite de la RDA", success:{text:"Tu t'entraînes déjà comme si le combat t'attendait.", deltas:{force:5,courage:6}, flags:{interet:'militaire'}}},
+      {label:"Te passionner pour les affaires et l'exploitation de Pandora", success:{text:"Tu apprends à négocier, à calculer, à saisir ta chance.", deltas:{charme:5,chance:6}, flags:{interet:'civil'}}},
+      {label:"Rêver de devenir artiste ou journaliste, loin des conflits", success:{text:"Tu observes le monde avec un œil différent, plus sensible.", deltas:{charme:5,sagesse:3}, flags:{interet:'artiste'}}},
+    ]},
+  {id:'h3', age:18, title:"Le grand choix",
+    text:s=>`${s.name} a 18 ans. L'heure est venue de choisir la voie qui façonnera toute une vie. Ce choix orientera durablement ce qui lui viendra facilement, ou non.`,
+    choices:[
+      {label:"Rejoindre le Programme Avatar", success:{text:"Tu es sélectionné(e) pour lier ta conscience à un corps Na'vi. Cette voie scientifique te rendra plus sage et plus en harmonie plus vite, mais le reste te demandera davantage d'efforts.", flags:{path:'avatar', archetype:'sagesse', archetypeLabel:'Scientifique'}, deltas:{sagesse:3}}},
+      {label:"Rejoindre la sécurité RDA", success:{text:"Tu enfiles l'uniforme et embarques pour Pandora en soldat. Cette voie militaire te rendra plus fort(e) et plus courageux(se) plus vite, mais le reste te demandera davantage d'efforts.", flags:{path:'militaire', archetype:'force', archetypeLabel:'Militaire'}, deltas:{force:3}}},
+      {label:"Rester civil, entre Terre et Pandora", success:{text:"Tu choisis une vie plus discrète, loin des projecteurs. Cette voie te rendra plus charismatique et plus chanceux(se) plus vite, mais le reste te demandera davantage d'efforts.", flags:{path:'civil', archetype:'chance', archetypeLabel:'Civil(e)'}, deltas:{chance:3}}},
+      {label:"Devenir journaliste indépendant sur Pandora", success:{text:"Tu embarques avec ta caméra plutôt qu'une arme ou un caisson. Cette voie te rendra plus charismatique et plus chanceux(se) plus vite, mais le reste te demandera davantage d'efforts.", flags:{path:'civil', journaliste:true, archetype:'chance', archetypeLabel:'Journaliste'}, deltas:{charme:4}}},
+    ]},
+  ]);
+}
+
+/* ---- Branche AVATAR ---- */
+function buildAvatarTrunk(){
+  return markMilestones([
+  {id:'a1', age:21, title:"Premier réveil dans un corps Na'vi",
+    text:s=>`${s.name} ouvre les yeux dans le caisson de liaison. Un corps neuf, immense, na'vi, t'attend.`,
+    choices:[
+      {label:"Showman — te jeter directement dans la jungle pour tester ton avatar", chance:15, chanceStat:'courage',
+       success:{text:"Tu cours, sautes, respires cette nouvelle peau comme si tu étais né(e) pour elle. Les scientifiques n'en reviennent pas.", deltas:{harmonie:12,courage:8}, reputationDelta:15},
+       fail:{text:"Tu trébuches, blessé(e), et dois rentrer au caisson plus tôt que prévu — humilié(e) devant l'équipe.", deltas:{harmonie:-4,courage:-3}, reputationDelta:-6}},
+      {label:"Prudent — suivre le protocole d'intégration étape par étape", chance:85, chanceStat:'sagesse',
+       success:{text:"Chaque geste est mesuré, chaque sortie encadrée. L'intégration se fait en douceur.", deltas:{harmonie:6,sagesse:4}},
+       fail:{text:"Même prudent, ton corps réagit mal au lien ce jour-là. Un simple retard, mais un vrai coup au moral.", deltas:{harmonie:-1,sagesse:1}}},
+      {label:"Observer longuement avant d'agir, en scientifique méthodique", success:{text:"Tu prends des notes précises sur chaque sensation, chaque réflexe.", deltas:{sagesse:5,harmonie:3}}},
+      {label:"Demander à un Na'vi du camp de t'accompagner dès le début", chance:50, chanceStat:'charme',
+       success:{text:"Une présence bienveillante facilite tes premiers pas.", deltas:{harmonie:6,charme:3}},
+       fail:{text:"Ta demande reste sans réponse pour l'instant, un peu vexant(e).", deltas:{chance:-2,sagesse:1}}},
+    ]},
+  {id:'a2', age:24, title:"Rencontre avec le clan",
+    text:s=>`Un clan Na'vi vit non loin de la base. Il faudra bien, un jour, les approcher.`,
+    choices:[
+      {label:"Aller seul(e) à leur rencontre, sans arme ni escorte", chance:22, chanceStat:'chance',
+       success:{text:"Contre toute attente, une chasseuse te sauve d'un prédateur et t'introduit auprès des siens.", deltas:{harmonie:10,charme:6}, reputationDelta:12},
+       fail:{text:"Le clan te chasse, méfiant. Tu dois rentrer bredouille, et patienter.", deltas:{harmonie:-3}, reputationDelta:-3}},
+      {label:"Attendre d'être repéré(e) en faisant profil bas", chance:75, chanceStat:'sagesse',
+       success:{text:"Ta patience finit par payer : un éclaireur du clan t'observe, puis t'approche.", deltas:{sagesse:5,harmonie:4}},
+       fail:{text:"Le clan t'ignore encore de longs mois, une attente frustrante.", deltas:{sagesse:2,chance:-1}}},
+      {label:"Envoyer des présents symboliques avant de te montrer", success:{text:"Ton geste est remarqué, même s'il reste sans réponse immédiate.", deltas:{charme:4,chance:3}}},
+      {label:"Étudier leur langue et leurs coutumes avant tout contact", success:{text:"Quand le contact vient enfin, tu es prêt(e) à le recevoir dignement.", deltas:{sagesse:6}}},
+    ]},
+  {id:'a3', age:27, title:"Le jour de l'Ikran",
+    text:s=>`Adopté(e) par le clan, ${s.name} doit maintenant choisir et dompter son propre Ikran, comme n'importe quel enfant du Peuple.`,
+    choices:[
+      {label:"Showman — un combat impressionnant pour dompter l'Ikran", chance:10, chanceStat:'courage',
+       success:{text:"Dans un geste fou, tu domptes un Ikran que même les meilleurs chasseurs évitaient. Le clan crie ton nouveau nom.", deltas:{courage:16,force:8}, reputationDelta:25, flags:{ikranEpique:true}},
+       fail:{text:"L'Ikran te rejette et te blesse en chutant. Ton corps avatar porte une cicatrice, et ta fierté aussi.", deltas:{courage:-4,force:-4}, reputationDelta:-8, deathChance:4, deathText:"Ta conscience se déconnecte brutalement lors de la chute."}},
+      {label:"Prudent — y aller doucement, étape par étape", chance:80, chanceStat:'sagesse',
+       success:{text:"Patiemment, tu gagnes la confiance d'un Ikran loyal, sous les yeux approbateurs des Anciens.", deltas:{harmonie:6,courage:3}, reputationDelta:6},
+       fail:{text:"L'Ikran refuse le lien pour aujourd'hui. Une déception, mais tu comprends mieux la créature.", deltas:{harmonie:-2,sagesse:2}}},
+    ]},
+  {id:'a4', age:31, title:"Un cœur entre deux mondes",
+    text:s=>`${s.name} tombe sous le charme d'un membre du clan.`,
+    choices:[
+      {label:s=>`Suivre ton cœur et chercher ${spouseNoun(s)} auprès du clan`, chance:65, chanceStat:'charme',
+       success:{text:"Le lien se noue. Tu es désormais uni(e) à quelqu'un du Peuple.", family:s=>({married:true, spouseName:pick(spousePool(s,'navi')), spouseSpecies:'navi'}), deltas:{harmonie:7,charme:4}, flags:{seekingLove:true}},
+       fail:{text:"Le clan hésite encore à accepter cette union entre deux mondes.", deltas:{harmonie:-2}, flags:{seekingLove:true}}},
+      {label:"Rester concentré(e) sur ta mission scientifique", success:{text:"Tu mets ton cœur de côté pour ton travail et le clan.", deltas:{sagesse:5}, reputationDelta:3, flags:{seekingLove:false}}},
+      {label:"Te concentrer sur ton lien avec le clan entier plutôt qu'une personne", success:{text:"Tu deviens un pilier discret de la communauté, sans union précise.", deltas:{harmonie:4,sagesse:2}, flags:{seekingLove:false}}},
+      {label:"Accepter une union arrangée par les Anciens", chance:60, chanceStat:'sagesse',
+       success:{text:"Une union stable et respectée voit le jour, guidée par la sagesse des Anciens.", family:s=>({married:true, spouseName:pick(spousePool(s,'navi')), spouseSpecies:'navi'}), deltas:{harmonie:5}, flags:{seekingLove:true}},
+       fail:{text:"Les Anciens renoncent finalement à cette idée, un peu à contrecœur.", deltas:{harmonie:-2,sagesse:1}, flags:{seekingLove:true}}},
+    ]},
+  familyStage('a5', 35, 'navi'),
+  {id:'a6', age:40, title:"Le conflit éclate",
+    text:s=>`La RDA lance une offensive majeure contre l'Arbre-Mère. Chacun doit choisir son camp.`,
+    choices:[
+      {label:"Prendre les armes pour défendre Pandora", chance:40, chanceStat:'force',
+       success:{text:"Tu combats aux côtés du Peuple. La victoire est amère mais réelle, et ton nom entre dans les récits.", deltas:{force:9,courage:9}, reputationDelta:22, deathChance:7, deathText:"Tu tombes au combat, entre deux mondes."},
+       fail:{text:"Tu es blessé(e) gravement, mais tu survis, porté(e) par les tiens.", deltas:{force:1,harmonie:-3}, reputationDelta:6, deathChance:10, deathText:"Tu tombes au combat, entre deux mondes."}},
+      {label:"Chercher une voie de paix impossible", success:{text:"Tes efforts de médiation limitent les pertes, sans empêcher la guerre.", deltas:{sagesse:9,harmonie:3}, reputationDelta:9}},
+      {label:"Rester neutre et protéger les tiens", success:{text:"Tu choisis la survie de ta famille plutôt que la bataille.", deltas:{charme:3}, reputationDelta:-4}},
+      {label:"Négocier secrètement l'évacuation de civils", chance:55, chanceStat:'sagesse',
+       success:{text:"Des vies sont sauvées grâce à ton initiative discrète.", deltas:{sagesse:8}, reputationDelta:15, flags:{paixLocale:true}},
+       fail:{text:"Ta tentative est découverte et sévèrement punie.", reputationDelta:-10, deathChance:6, deltas:{harmonie:-2}}},
+    ]},
+  {id:'a7', age:48, title:"Le choix ultime",
+    text:s=>`Devant l'Arbre des Âmes, ${s.name} peut transférer sa conscience à jamais dans son corps na'vi — un aller sans retour.`,
+    choices:[
+      {label:"Devenir Na'vi pour toujours", chance:38, chanceStat:'harmonie',
+       success:{text:"Eywa entend ta prière. Ta conscience humaine s'éteint ; tu renais, pleinement Na'vi, pour le reste de ta longue vie.", becomeNavi:true, deltas:{harmonie:14,courage:5}, reputationDelta:18, flags:{a7Attempted:true, a7Age:48}},
+       fail:{text:"Le rituel échoue cette fois. Tu restes dans ton corps humain, marqué(e) par la tentative — mais tu pourras retenter ta chance.", deltas:{harmonie:-5}, reputationDelta:-2, flags:{a7Attempted:true, a7Age:48}}},
+      {label:"Rester humain(e), fidèle à ton corps d'origine", success:{text:"Tu choisis de vieillir en humain, mais le cœur tourné vers Pandora.", deltas:{sagesse:5}, flags:{a7Attempted:true, a7Age:48}}},
+      {label:"Vivre à cheval entre les deux mondes, sans trancher", success:{text:"Tu navigues, année après année, entre caisson et clan, sans jamais choisir vraiment.", deltas:{harmonie:4,sagesse:2}, flags:{a7Attempted:true, a7Age:48}}},
+      {label:"Retourner définitivement sur Terre", success:{text:"Tu tournes le dos à Pandora, le cœur lourd mais la décision prise.", deltas:{sagesse:4,harmonie:-6}, reputationDelta:-5, flags:{quitPandora:true, devenuNaviDecided:true}}},
+    ]},
+  ]);
+}
+
+/* ---- Branche MILITAIRE ---- */
+function buildMilitaryTrunk(){
+  return markMilestones([
+  {id:'m1', age:21, title:"Le baptême du feu",
+    text:s=>`${s.name} termine son entraînement RDA sur Pandora. La jungle n'attend personne.`,
+    choices:[
+      {label:"Showman — te porter volontaire pour les missions les plus dangereuses", chance:20, chanceStat:'courage',
+       success:{text:"Ton audace impressionne la hiérarchie. Promotion express et réputation de tête brûlée.", deltas:{courage:12,force:6}, reputationDelta:16},
+       fail:{text:"Une mission tourne mal. Tu en reviens blessé(e) et rétrogradé(e).", deltas:{courage:-4,force:-2}, reputationDelta:-8, deathChance:6, deathText:"Tu ne reviens pas de cette mission."}},
+      {label:"Prudent — suivre les ordres sans faire de vagues", chance:82, chanceStat:'sagesse',
+       success:{text:"Ton sérieux te vaut la confiance discrète de tes supérieurs.", deltas:{force:4,sagesse:3}},
+       fail:{text:"Rien de grave, mais ton avancement stagne cette année, un peu frustrant.", deltas:{sagesse:1,chance:-1}}},
+      {label:"Te former en tacticien plutôt qu'en combattant de terrain", success:{text:"Tu deviens indispensable en salle de commandement.", deltas:{sagesse:5,force:2}}},
+      {label:"Chercher à te faire des alliés parmi les autres recrues", success:{text:"Ton réseau naissant te sera utile bien plus tard.", deltas:{charme:5,chance:2}}},
+    ]},
+  {id:'m2', age:25, title:"Premier contact",
+    text:s=>`${s.name} participe à des opérations près du territoire Na'vi.`,
+    choices:[
+      {label:"Participer activement aux opérations contre les Na'vis", success:{text:"Tu deviens un rouage efficace de la machine de guerre RDA.", deltas:{force:6,harmonie:-6}, reputationDelta:8, flags:{antiNavi:true}}},
+      {label:"Commencer à douter et observer plus que tu n'agis", success:{text:"Ce que tu vois te trouble. Le doute s'installe.", deltas:{sagesse:7,harmonie:2}, flags:{doute:true}}},
+      {label:"Faire du renseignement discret sans prendre parti", success:{text:"Tu observes, notes, mais évites de choisir un camp trop vite.", deltas:{sagesse:5}}},
+      {label:"Aider secrètement des civils na'vis blessés", chance:45, chanceStat:'harmonie',
+       success:{text:"Ton geste clandestin sauve des vies, sans que personne ne le sache.", deltas:{harmonie:8}, reputationDelta:6, flags:{secretAlly:true}},
+       fail:{text:"Tu es soupçonné(e), et surveillé(e) de près désormais.", reputationDelta:-6, deltas:{harmonie:1}}},
+    ]},
+  {id:'m3', age:29, title:"L'amour sur la base",
+    text:s=>`Entre deux missions, ${s.name} croise quelqu'un qui compte.`,
+    choices:[
+      {label:s=>`Se marier avec ${spouseNoun(s)} croisé(e) sur la base`, chance:70, chanceStat:'charme',
+       success:{text:"Une cérémonie simple, sous les lumières artificielles de la base.", family:s=>({married:true, spouseName:pick(spousePool(s,'humain')), spouseSpecies:'humain'}), deltas:{charme:4,harmonie:2}, flags:{seekingLove:true}},
+       fail:{text:"La relation ne prend pas, entre deux déploiements.", deltas:{charme:-2}, flags:{seekingLove:true}}},
+      {label:"Rester concentré(e) sur la mission, seul(e)", success:{text:"Tu gardes ton cœur pour plus tard, ou pour jamais.", deltas:{force:3}, flags:{seekingLove:false}}},
+      {label:"Te lier d'une amitié forte, sans romance", success:{text:"Un lien solide, sans les complications de l'amour.", deltas:{charme:3,sagesse:2}, flags:{seekingLove:false}}},
+      {label:s=>`Nouer une relation secrète avec ${spouseNoun(s)} du camp adverse`, chance:35, chanceStat:'charme',
+       success:{text:"Un amour interdit et intense, caché aux yeux de tous.", family:s=>({married:true, spouseName:pick(spousePool(s,'navi')), spouseSpecies:'navi'}), deltas:{harmonie:6,charme:6}, flags:{secretLove:true, seekingLove:true}},
+       fail:{text:"La relation est découverte et sévèrement sanctionnée.", reputationDelta:-10, flags:{seekingLove:true}}},
+    ]},
+  {id:'m4', age:36, title:"Le grand dilemme",
+    text:s=>`Les ordres se durcissent. ${s.name} doit choisir : obéir, ou trahir.`,
+    choices:[
+      {label:"Rester fidèle à la RDA jusqu'au bout", success:{text:"Tu grimpes les échelons, respecté(e) mais redouté(e).", deltas:{force:6,harmonie:-4}, reputationDelta:10, flags:{loyalRDA:true}}},
+      {label:"Faire défection et rejoindre la résistance Na'vi", chance:50, chanceStat:'harmonie',
+       success:{text:"Tu risques tout — et rejoins ceux que tu combattais hier.", deltas:{courage:10,harmonie:10}, reputationDelta:14, flags:{deserteur:true}},
+       fail:{text:"Ta tentative de défection est découverte. Tu es emprisonné(e) puis exfiltré(e) en urgence.", deltas:{courage:2,harmonie:2}, reputationDelta:-10, deathChance:8, deathText:"Ta défection te coûte la vie."}},
+      {label:"Déserter discrètement et fuir loin du conflit", chance:60, chanceStat:'chance',
+       success:{text:"Tu disparais des radars, direction une colonie plus paisible.", deltas:{chance:6,harmonie:3}},
+       fail:{text:"Ta fuite échoue ; tu es rattrapé(e) et réintégré(e) de force.", deltas:{chance:-4,sagesse:1}, reputationDelta:-6}},
+      {label:"Négocier secrètement un cessez-le-feu local", chance:45, chanceStat:'sagesse',
+       success:{text:"Un accord fragile mais réel apaise un temps la région.", deltas:{sagesse:10}, reputationDelta:12, flags:{paixLocale:true}},
+       fail:{text:"Tu es accusé(e) de trahison pour cette tentative.", reputationDelta:-8, deathChance:5, deltas:{harmonie:-2}}},
+    ]},
+  {id:'m5', age:44, title:"La bataille finale",
+    text:s=>`Le conflit atteint son point culminant. ${s.name} doit jouer son rôle, quel qu'il soit.`,
+    choices:[
+      {label:"Mener l'assaut ou la défense en première ligne", chance:45, chanceStat:'force',
+       success:{text:"Ton nom résonnera longtemps, d'un côté du conflit ou de l'autre.", deltas:{force:8,courage:8}, reputationDelta:20, deathChance:8, deathText:"Tu tombes en première ligne."},
+       fail:{text:"Tu survis, marqué(e) à vie par ce que tu as vu et fait.", deltas:{harmonie:-4}, reputationDelta:4, deathChance:12, deathText:"Tu tombes en première ligne."}},
+      {label:"Superviser depuis l'arrière, loin du danger direct", success:{text:"Tu joues un rôle discret mais réel, en sécurité relative.", deltas:{sagesse:5}, reputationDelta:3}},
+      {label:"Tenter une médiation de dernière minute", chance:35, chanceStat:'sagesse',
+       success:{text:"Contre toute attente, tes mots évitent le pire.", deltas:{sagesse:10}, reputationDelta:18},
+       fail:{text:"Personne ne t'écoute dans le chaos ambiant.", reputationDelta:-4, deltas:{sagesse:1}}},
+      {label:"Déserter au dernier moment pour sauver ta peau", chance:65, chanceStat:'chance',
+       success:{text:"Tu survis, loin du champ de bataille, mais le poids du choix reste.", deltas:{chance:5}, reputationDelta:-8},
+       fail:{text:"Tu es rattrapé(e) avant d'avoir pu fuir.", reputationDelta:-15, deathChance:10, deltas:{harmonie:-3}}},
+    ]},
+  familyStage('m6', 33, 'humain'),
+  ]);
+}
+
+/* ---- Branche CIVILE ---- */
+function buildCivilTrunk(){
+  return markMilestones([
+  {id:'c1', age:21, title:"Premiers pas dans la vie active",
+    text:s=>`${s.name} commence sa vie professionnelle, entre Terre et Pandora.`,
+    choices:[
+      {label:"Viser une carrière ambitieuse dans l'exploitation minière", success:{text:"Tu grimpes vite les échelons de l'entreprise.", deltas:{chance:6,charme:3}}},
+      {label:"Choisir un métier plus modeste, mais stable", success:{text:"Tu bâtis une vie tranquille, loin des projecteurs.", deltas:{sagesse:5,harmonie:2}}},
+      {label:"Créer ta propre petite entreprise", chance:45, chanceStat:'chance',
+       success:{text:"Ton initiative porte ses fruits, modestement mais sûrement.", deltas:{chance:8,charme:4}, reputationDelta:6},
+       fail:{text:"L'entreprise échoue après quelques mois difficiles.", deltas:{chance:-4,sagesse:2}}},
+      {label:"Voyager et enchaîner les petits boulots", success:{text:"Tu accumules les expériences plus que l'argent.", deltas:{chance:4,sagesse:3}}},
+    ]},
+  {id:'c2', age:25, title:"Une rencontre",
+    text:s=>`${s.name} croise quelqu'un qui change sa vie.`,
+    choices:[
+      {label:s=>`Se marier rapidement avec ${spouseNoun(s)} que tu aimes`, chance:70, chanceStat:'charme',
+       success:{text:"Une belle histoire d'amour humaine, simple et sincère.", family:s=>({married:true, spouseName:pick(spousePool(s,'humain')), spouseSpecies:'humain'}), deltas:{charme:5,harmonie:2}, flags:{seekingLove:true}},
+       fail:{text:"La relation ne dure pas.", deltas:{charme:-2}, flags:{seekingLove:true}}},
+      {label:"Profiter de ta liberté encore quelques années", success:{text:"Tu explores, voyages, te découvres toi-même.", deltas:{chance:4,sagesse:2}, flags:{seekingLove:true}}},
+      {label:"Te consacrer à des amitiés plutôt qu'à l'amour", success:{text:"Un cercle fidèle t'entoure, sans romance.", deltas:{charme:3,sagesse:2}, flags:{seekingLove:false}}},
+      {label:"Multiplier les rencontres sans t'attacher", success:{text:"Tu profites du moment présent, léger(ère) et libre.", deltas:{chance:4,charme:2}, flags:{seekingLove:true}}},
+    ]},
+  familyStage('c3', 29, 'humain'),
+  {id:'c4', age:40, title:"Une opportunité tardive",
+    text:s=>`On propose à ${s.name} de rejoindre, sur le tard, le Programme Avatar.`,
+    choices:[
+      {label:"Saisir cette chance inattendue", chance:55, chanceStat:'chance',
+       success:{text:"Tu obtiens un lien avatar tardif et découvres Pandora sous un jour nouveau. Le Peuple t'accueille avec curiosité.", deltas:{harmonie:10,sagesse:4}, reputationDelta:10, flags:{avatarTardif:true, a7Attempted:true, a7Age:40}},
+       fail:{text:"Le programme te refuse — trop tard, disent-ils. Tu poursuis ta vie telle qu'elle était.", deltas:{harmonie:-2,sagesse:1}}},
+      {label:"Refuser et poursuivre ta vie tranquille", success:{text:"Tu choisis la stabilité plutôt que l'aventure.", deltas:{sagesse:5}, reputationDelta:2}},
+      {label:"Convaincre toute ta famille de tenter l'aventure avec toi", chance:40, chanceStat:'charme',
+       success:{text:"Toute la famille se lance dans cette nouvelle vie, ensemble.", deltas:{harmonie:8,charme:5}, reputationDelta:6},
+       fail:{text:"Ta famille refuse de te suivre dans cette aventure.", deltas:{charme:-3,sagesse:1}}},
+      {label:"Refuser mais proposer ton soutien logistique depuis la Terre", success:{text:"Tu deviens un maillon discret mais utile du programme.", deltas:{sagesse:5}, reputationDelta:4}},
+    ]},
+  {id:'c5', age:60, title:"La retraite approche",
+    text:s=>`${s.name} envisage la suite, plus calme, de sa vie.`,
+    choices:[
+      {label:"Voyager et profiter du temps qu'il te reste", success:{text:"Tu découvres enfin des recoins de Pandora que tu n'avais jamais vus.", deltas:{chance:5,harmonie:3}}},
+      {label:"Transmettre ton expérience aux nouvelles générations", success:{text:"Tu deviens une référence pour les jeunes arrivants sur Pandora.", deltas:{sagesse:7}, reputationDelta:8}},
+      {label:"Écrire tes mémoires", success:{text:"Ton histoire personnelle prend forme, page après page.", deltas:{sagesse:6}, reputationDelta:6}},
+      {label:"Te consacrer à des œuvres caritatives", success:{text:"Tu passes tes dernières années utile aux autres.", deltas:{charme:6}, reputationDelta:6}},
+    ]},
+  ]);
+}
+
+/* ============================= RETOURS RÉCURRENTS (seules exceptions à la règle "jamais deux fois") ============================= */
+
+function makeLoveRetryStage(state, age){
+  const noun = spouseNoun(state);
+  const spSpecies = state.species; // cherche généralement dans son propre monde
+  const intros = [
+    `${state.name} n'a toujours pas trouvé ${noun}. Une nouvelle occasion se présente peut-être cette année.`,
+    `Le temps passe, et ${state.name} pense encore à trouver ${noun}.`,
+    `Une rencontre imprévue relance chez ${state.name} l'espoir de trouver ${noun}.`,
+    `${state.name} se surprend à espérer encore trouver ${noun}, un jour.`,
+  ];
+  const intro = pick(intros);
+  return {id:'loveretry_'+age, age, tier:'core',
+    title:"Toujours en quête d'amour",
+    text:()=>intro,
+    choices:[
+      {label:`Retenter ta chance de trouver ${noun}`, chance:60, chanceStat:'charme',
+       success:{text:"Cette fois, la rencontre est la bonne.", family:s=>({married:true, spouseName:pick(spousePool(s, spSpecies)), spouseSpecies:spSpecies}), deltas:{harmonie:6,charme:4}, flags:{lastLoveAttemptAge:age}},
+       fail:{text:"Toujours pas. Tu ne perds pas espoir pour autant.", deltas:{charme:-1,sagesse:1}, flags:{lastLoveAttemptAge:age}}},
+      {label:"Continuer à chercher activement, sans forcer", success:{text:"Tu multiplies les rencontres, sans succès pour l'instant.", deltas:{chance:2}, flags:{lastLoveAttemptAge:age}}},
+      {label:"Faire une pause dans cette quête", success:{text:"Tu te concentres sur autre chose un temps.", deltas:{sagesse:2}, flags:{lastLoveAttemptAge:age}}},
+      {label:"Renoncer définitivement à trouver l'amour", success:{text:"Tu fais la paix avec une vie sans partenaire.", deltas:{sagesse:4}, flags:{seekingLove:false, lastLoveAttemptAge:age}}},
+    ]};
+}
+function makeBecomeNaviRetryStage(state, age){
+  const intros = [
+    `${state.name} songe encore à transférer sa conscience pour devenir pleinement Na'vi.`,
+    `L'idée revient hanter ${state.name} : et si l'heure était enfin venue de devenir Na'vi ?`,
+    `${state.name} repense à l'Arbre des Âmes, et à ce qu'il/elle n'a pas encore tenté.`,
+  ];
+  const intro = pick(intros);
+  return {id:'naviretry_'+age, age, tier:'core',
+    title:"L'appel de l'Arbre des Âmes",
+    text:()=>intro,
+    choices:[
+      {label:"Retenter le rituel devant l'Arbre des Âmes", chance:45, chanceStat:'harmonie',
+       success:{text:"Cette fois, Eywa t'entend. Tu renais pleinement Na'vi.", becomeNavi:true, deltas:{harmonie:12,courage:4}, reputationDelta:15, flags:{lastNaviAttemptAge:age}},
+       fail:{text:"Le rituel échoue encore. Tu n'as pas dit ton dernier mot.", deltas:{harmonie:-2,sagesse:1}, flags:{lastNaviAttemptAge:age}}},
+      {label:"Continuer à y réfléchir encore un peu", success:{text:"Tu prends ton temps face à cette décision capitale.", deltas:{sagesse:2}, flags:{lastNaviAttemptAge:age}}},
+      {label:"Te rapprocher davantage du clan avant de retenter", success:{text:"Tu renforces tes liens en prévision du grand jour.", deltas:{harmonie:3}, flags:{lastNaviAttemptAge:age}}},
+      {label:"Renoncer définitivement à devenir Na'vi", success:{text:"Tu acceptes ton destin humain.", deltas:{sagesse:5}, flags:{devenuNaviDecided:true}}},
+    ]};
+}
+
+
+/* ============================= PETITE ENFANCE (choix simples, mais toujours variés) ============================= */
+
+function babyPool(species){
+  if(species==='navi'){
+    return [
+      {title:"Découverte du monde", text:s=>`Encore tout(e) petit(e), ${s.name} découvre à peine le monde qui l'entoure.`, choices:[
+        {label:"T'aventurer hors de ton lit de mousse", chance:50, chanceStat:'chance',
+         success:{text:"Tu rampes plus loin que d'habitude, curieux(se) de tout.", deltas:{chance:2,courage:1}},
+         fail:{text:"Tu trébuches et pleures un peu, sans gravité.", deltas:{harmonie:-1}}},
+        {label:"Rester bien sagement dans ton lit", success:{text:"Tu observes le monde depuis la sécurité de ton nid.", deltas:{harmonie:1}}},
+        {label:"Goûter un insecte qui passe par là", success:{text:"Ce n'était vraiment pas comestible. Tu grimaces fort.", deltas:{chance:1}}},
+        {label:"Observer un long moment avant de bouger", success:{text:"Une journée tranquille, mais tu apprends déjà à observer.", deltas:{sagesse:1}}},
+      ]},
+      {title:"Un bruit dans la nuit", text:s=>`Un bruit inconnu réveille ${s.name} au cœur de la nuit.`, choices:[
+        {label:"Pleurer très fort", success:{text:"Ta mère accourt aussitôt te rassurer.", deltas:{charme:1}}},
+        {label:"Observer en silence dans le noir", success:{text:"Tu restes calme, les yeux grands ouverts.", deltas:{sagesse:1}}},
+        {label:"Ramper vers la lumière du feu", chance:50, chanceStat:'chance',
+         success:{text:"Tu atteins la chaleur du foyer sans encombre.", deltas:{chance:1,courage:1}},
+         fail:{text:"Tu te cognes dans le noir et pleures un peu.", deltas:{harmonie:-1}}},
+        {label:"Te blottir contre la fourrure la plus proche", success:{text:"Le sommeil reprend vite le dessus.", deltas:{harmonie:1}}},
+      ]},
+      {title:"Le goût de la terre", text:s=>`${s.name} porte tout ce qu'il/elle trouve à sa bouche.`, choices:[
+        {label:"Goûter une feuille tombée au sol", success:{text:"Amère, tu la recraches aussitôt en grimaçant.", deltas:{chance:1}}},
+        {label:"L'examiner avec curiosité sans la goûter", success:{text:"Tu tournes et retournes la feuille dans tes mains.", deltas:{sagesse:1}}},
+        {label:"La lancer joyeusement au loin", success:{text:"Le geste te fait rire aux éclats.", deltas:{force:1}}},
+        {label:"La montrer fièrement à qui passe", success:{text:"Ton petit cri attire un sourire attendri.", deltas:{charme:1}}},
+      ]},
+      {title:"Une drôle de créature", text:s=>`Une petite créature volette près du lit de ${s.name}.`, choices:[
+        {label:"Tendre la main vers elle", chance:55, chanceStat:'chance',
+         success:{text:"Elle se pose un instant sur ton doigt, comme un signe.", deltas:{harmonie:2}},
+         fail:{text:"Elle s'envole avant que tu ne l'atteignes, tu boudes un peu.", deltas:{charme:-1}}},
+        {label:"Te cacher sous la couverture", success:{text:"Tu préfères la sécurité du nid.", deltas:{harmonie:1}}},
+        {label:"L'observer sans bouger", success:{text:"Tes yeux la suivent, fascinés.", deltas:{sagesse:1}}},
+        {label:"Essayer de l'attraper en riant", success:{text:"Tu t'amuses beaucoup, même sans l'attraper.", deltas:{courage:1}}},
+      ]},
+      {title:"Premiers babillages", text:s=>`${s.name} teste sa voix pour la première fois.`, choices:[
+        {label:"Babiller joyeusement sans t'arrêter", success:{text:"Ton babillage fait sourire tout le foyer.", deltas:{charme:2}}},
+        {label:"Essayer d'imiter un chant entendu", success:{text:"Un son maladroit, mais une vraie mélodie s'esquisse.", deltas:{harmonie:1}}},
+        {label:"Rester silencieux(se), à observer", success:{text:"Tu préfères écouter avant de parler.", deltas:{sagesse:1}}},
+        {label:"Sourire simplement à qui passe", success:{text:"Ton sourire désarme tout le monde.", deltas:{charme:1}}},
+      ]},
+      {title:"Le vent dans les feuilles", text:s=>`Une brise fait danser les feuilles au-dessus du nid de ${s.name}.`, choices:[
+        {label:"Suivre le mouvement des yeux, fasciné(e)", success:{text:"Tu restes hypnotisé(e) un long moment.", deltas:{sagesse:1}}},
+        {label:"T'endormir, bercé(e) par le vent", success:{text:"Une sieste paisible s'ensuit.", deltas:{harmonie:1}}},
+        {label:"Gigoter d'excitation", success:{text:"Tu agites bras et jambes avec entrain.", deltas:{courage:1}}},
+        {label:"Pleurer un peu, surpris(e)", success:{text:"Un câlin suffit à te calmer.", deltas:{charme:1}}},
+      ]},
+    ];
+  }
+  return [
+    {title:"Premiers pas", text:s=>`Encore tout(e) petit(e), ${s.name} découvre à peine le monde qui l'entoure.`, choices:[
+      {label:"Essayer de te mettre debout et marcher", chance:50, chanceStat:'force',
+       success:{text:"Quelques pas hésitants, sous les applaudissements.", deltas:{force:2,courage:1}},
+       fail:{text:"Tu tombes sur les fesses. Rien de grave, mais un peu de dépit.", deltas:{harmonie:-1}}},
+      {label:"Ramper explorer la pièce", success:{text:"Tu explores chaque recoin à ta portée.", deltas:{chance:1}}},
+      {label:"Pleurer pour attirer l'attention", success:{text:"Ça marche à tous les coups.", deltas:{charme:1}}},
+      {label:"Observer un long moment avant de bouger", success:{text:"Une journée tranquille, mais tu apprends déjà à observer.", deltas:{sagesse:1}}},
+    ]},
+    {title:"Une découverte brillante", text:s=>`${s.name} repère un objet brillant hors de portée.`, choices:[
+      {label:"Toucher l'objet du bout des doigts", success:{text:"Tu l'attrapes enfin, ravi(e).", deltas:{chance:1}}},
+      {label:"Le porter directement à la bouche", success:{text:"Ce n'était pas comestible, tu grimaces.", deltas:{sagesse:1}}},
+      {label:"L'étudier attentivement sans y toucher", success:{text:"Tu l'observes longuement, intrigué(e).", deltas:{sagesse:1}}},
+      {label:"Le montrer du doigt en babillant", success:{text:"Quelqu'un te l'apporte en souriant.", deltas:{charme:1}}},
+    ]},
+    {title:"Un bruit inconnu", text:s=>`Un bruit soudain surprend ${s.name}.`, choices:[
+      {label:"Pleurer aussitôt", success:{text:"On te prend vite dans les bras.", deltas:{charme:1}}},
+      {label:"Observer curieusement d'où ça vient", success:{text:"Tu cherches la source du bruit, attentif(ve).", deltas:{sagesse:1}}},
+      {label:"Te cacher le visage", success:{text:"Tu préfères ne rien voir.", deltas:{harmonie:1}}},
+      {label:"Gazouiller comme si de rien n'était", success:{text:"Le bruit ne t'inquiète déjà plus.", deltas:{courage:1}}},
+    ]},
+    {title:"L'heure du repas", text:s=>`C'est l'heure de manger pour ${s.name}.`, choices:[
+      {label:"Refuser catégoriquement de manger", success:{text:"Une petite bataille, sans conséquence.", deltas:{courage:1}}},
+      {label:"Dévorer avec enthousiasme", success:{text:"Tu manges de bon appétit.", deltas:{force:1}}},
+      {label:"Jeter la nourriture par terre en riant", success:{text:"Ça t'amuse beaucoup plus que prévu.", deltas:{chance:1}}},
+      {label:"Manger calmement, sans histoires", success:{text:"Un repas sans accroc.", deltas:{sagesse:1}}},
+    ]},
+    {title:"Un jouet coloré", text:s=>`On tend un jouet coloré à ${s.name}.`, choices:[
+      {label:"Le lancer le plus loin possible", success:{text:"Tu ris aux éclats en le voyant voler.", deltas:{force:1}}},
+      {label:"Le mâchouiller consciencieusement", success:{text:"Il finit couvert de bave, mission accomplie.", deltas:{sagesse:1}}},
+      {label:"L'étudier sous toutes les coutures", success:{text:"Tu sembles déjà très concentré(e).", deltas:{sagesse:1}}},
+      {label:"Le partager en le tendant vers quelqu'un", success:{text:"Ton geste attendrit tout le monde.", deltas:{charme:1}}},
+    ]},
+    {title:"Une sieste difficile", text:s=>`${s.name} résiste à l'heure de la sieste.`, choices:[
+      {label:"Résister de toutes tes forces", success:{text:"Tu tiens bon un moment, avant de céder.", deltas:{courage:1}}},
+      {label:"T'endormir instantanément", success:{text:"Le sommeil l'emporte sans discussion.", deltas:{harmonie:1}}},
+      {label:"Pleurer un peu avant de céder", success:{text:"Un dernier câlin, et te voilà endormi(e).", deltas:{charme:1}}},
+      {label:"Babiller encore un peu avant de dormir", success:{text:"Tu te racontes une dernière histoire, à ta façon.", deltas:{sagesse:1}}},
+    ]},
+  ];
+}
+
+function toddlerPool(species){
+  if(species==='navi'){
+    return [
+      {title:"Premiers jeux", text:s=>`${s.name} joue avec les autres enfants du clan.`, choices:[
+        {label:"Jouer à imiter les chasseurs", success:{text:"Tu t'amuses à mimer les gestes des adultes.", deltas:{force:2}}},
+        {label:"Rester près de ta mère", success:{text:"Tu préfères la sécurité du foyer.", deltas:{harmonie:2}}},
+        {label:"Poser mille questions aux Anciens", success:{text:"Ta curiosité amuse les Anciens.", deltas:{sagesse:2}}},
+        {label:"Faire une petite bêtise", success:{text:"On te gronde gentiment, en souriant.", deltas:{chance:1}}},
+      ]},
+      {title:"Une journée dans l'Arbre-Maison", text:s=>`${s.name} grandit doucement parmi les siens.`, choices:[
+        {label:"Grimper là où tu ne devrais pas", chance:50, chanceStat:'chance',
+         success:{text:"Tu redescends fier(ère) de ton exploit.", deltas:{courage:2}},
+         fail:{text:"Tu glisses un peu, plus de peur que de mal.", deltas:{harmonie:-1}}},
+        {label:"Chanter avec les autres enfants", success:{text:"Ta petite voix se mêle aux autres.", deltas:{charme:2}}},
+        {label:"Observer les tisseuses travailler", success:{text:"Tu regardes, fasciné(e), leurs mains habiles.", deltas:{sagesse:2}}},
+        {label:"Aider à préparer le repas du soir", success:{text:"Ta petite aide est accueillie avec le sourire.", deltas:{charme:1,sagesse:1}}},
+      ]},
+      {title:"Sauter ou pas ?", text:s=>`${s.name} se tient au bord d'une petite racine surélevée, hésitant(e).`, choices:[
+        {label:"Sauter sans réfléchir", chance:55, chanceStat:'chance',
+         success:{text:"Un saut réussi, tu atterris fièrement.", deltas:{courage:2}},
+         fail:{text:"Tu tombes doucement dans la mousse, sans mal.", deltas:{harmonie:-1}}},
+        {label:"Redescendre prudemment", success:{text:"Tu préfères la prudence à l'exploit.", deltas:{sagesse:2}}},
+        {label:"Demander à quelqu'un de t'aider", success:{text:"Un aîné t'aide à descendre en douceur.", deltas:{charme:2}}},
+        {label:"Encourager un autre enfant à sauter à ta place", success:{text:"Tu regardes, hilare, le résultat.", deltas:{chance:1}}},
+      ]},
+      {title:"Manger ou pas ?", text:s=>`Un fruit inconnu traîne devant ${s.name}, personne ne regarde.`, choices:[
+        {label:"Le manger sans hésiter", chance:60, chanceStat:'chance',
+         success:{text:"Délicieux ! Tu en redemanderais bien.", deltas:{chance:2}},
+         fail:{text:"Trop acide, tu fais une grimace mémorable.", deltas:{harmonie:-1}}},
+        {label:"Le laisser où il est", success:{text:"Tu préfères ne pas prendre de risque.", deltas:{sagesse:2}}},
+        {label:"Le montrer à un adulte d'abord", success:{text:"Bonne initiative, saluée par les Anciens.", deltas:{sagesse:2}, reputationDelta:2}},
+        {label:"Le donner à un autre enfant", success:{text:"Un geste de partage remarqué.", deltas:{charme:2}}},
+      ]},
+      {title:"Un animal curieux", text:s=>`Un petit animal de la forêt s'approche de ${s.name}.`, choices:[
+        {label:"Aller le caresser", chance:50, chanceStat:'chance',
+         success:{text:"L'animal se laisse faire, un moment magique.", deltas:{harmonie:2}},
+         fail:{text:"Il s'enfuit, effrayé, avant que tu ne l'atteignes.", deltas:{chance:-1}}},
+        {label:"Rester immobile pour ne pas l'effrayer", success:{text:"Ta patience est récompensée par un long regard partagé.", deltas:{sagesse:2}}},
+        {label:"Courir vers lui en criant de joie", success:{text:"Il détale aussitôt, mais tu ris quand même.", deltas:{courage:1}}},
+        {label:"L'appeler doucement", success:{text:"Il t'observe, curieux à son tour.", deltas:{charme:1}}},
+      ]},
+    ];
+  }
+  return [
+    {title:"Premiers jeux", text:s=>`${s.name} découvre le monde qui l'entoure.`, choices:[
+      {label:"Jouer avec d'autres enfants", success:{text:"Tu apprends déjà à partager et rire ensemble.", deltas:{charme:2}}},
+      {label:"Rester près de tes parents", success:{text:"Tu préfères la sécurité du foyer.", deltas:{harmonie:2}}},
+      {label:"Poser sans cesse la question \"pourquoi\"", success:{text:"Ta curiosité amuse les adultes autour de toi.", deltas:{sagesse:2}}},
+      {label:"Faire une petite bêtise", success:{text:"On te gronde gentiment, en souriant.", deltas:{chance:1}}},
+    ]},
+    {title:"Une journée ordinaire", text:s=>`${s.name} grandit tranquillement.`, choices:[
+      {label:"Grimper là où tu ne devrais pas", chance:50, chanceStat:'chance',
+       success:{text:"Tu redescends fier(ère) de ton exploit.", deltas:{courage:2}},
+       fail:{text:"Tu glisses un peu, plus de peur que de mal.", deltas:{harmonie:-1}}},
+      {label:"Regarder des dessins animés", success:{text:"Un moment calme devant l'écran.", deltas:{charme:1}}},
+      {label:"Observer les adultes travailler", success:{text:"Tu regardes, fasciné(e), ce qu'ils font.", deltas:{sagesse:2}}},
+      {label:"Aider à mettre la table", success:{text:"Ta petite aide est accueillie avec le sourire.", deltas:{charme:1,sagesse:1}}},
+    ]},
+    {title:"Sauter ou pas ?", text:s=>`${s.name} se tient en haut du petit toboggan, hésitant(e).`, choices:[
+      {label:"Sauter sans réfléchir", chance:55, chanceStat:'chance',
+       success:{text:"Un atterrissage parfait, tu es ravi(e).", deltas:{courage:2}},
+       fail:{text:"Tu tombes doucement, plus de peur que de mal.", deltas:{harmonie:-1}}},
+      {label:"Redescendre prudemment", success:{text:"Tu préfères la prudence à l'exploit.", deltas:{sagesse:2}}},
+      {label:"Demander de l'aide à un adulte", success:{text:"On t'aide à redescendre en douceur.", deltas:{charme:2}}},
+      {label:"Encourager un autre enfant à sauter à ta place", success:{text:"Tu regardes, hilare, le résultat.", deltas:{chance:1}}},
+    ]},
+    {title:"Manger ou pas ?", text:s=>`Un bonbon traîne sur la table, personne ne regarde.`, choices:[
+      {label:"Le manger sans hésiter", chance:60, chanceStat:'chance',
+       success:{text:"Délicieux ! Un vrai bonheur sucré.", deltas:{chance:2}},
+       fail:{text:"Tu te fais gronder, la main dans le sac.", deltas:{harmonie:-1}}},
+      {label:"Le laisser où il est", success:{text:"Tu résistes bravement à la tentation.", deltas:{sagesse:2}}},
+      {label:"Le montrer à un adulte d'abord", success:{text:"Bonne initiative, saluée par tes parents.", deltas:{sagesse:2}, reputationDelta:2}},
+      {label:"Le donner à un autre enfant", success:{text:"Un geste de partage remarqué.", deltas:{charme:2}}},
+    ]},
+    {title:"Un animal curieux", text:s=>`Un petit animal s'approche de ${s.name} dans le jardin.`, choices:[
+      {label:"Aller le caresser", chance:50, chanceStat:'chance',
+       success:{text:"L'animal se laisse faire, un moment adorable.", deltas:{harmonie:2}},
+       fail:{text:"Il s'enfuit avant que tu ne l'atteignes.", deltas:{chance:-1}}},
+      {label:"Rester immobile pour ne pas l'effrayer", success:{text:"Ta patience est récompensée par un long regard partagé.", deltas:{sagesse:2}}},
+      {label:"Courir vers lui en criant de joie", success:{text:"Il détale aussitôt, mais tu ris quand même.", deltas:{courage:1}}},
+      {label:"L'appeler doucement", success:{text:"Il t'observe, curieux à son tour.", deltas:{charme:1}}},
+    ]},
+  ];
+}
+
+/* ============================= ÉVÉNEMENTS DE REMPLISSAGE (années calmes, jamais répétés dans une vie) ============================= */
+
+function F(id,title,text,choices){ return {id, title, text:()=>text, choices, tier:'filler'}; }
+
+const NAVI_JEUNESSE = [
+  F('nj1',"Une blessure d'enfance","Une chute depuis les branches te laisse une cicatrice et une leçon.",[
+    {label:"Pleurer et te faire consoler", success:{text:"Tu apprends que la vulnérabilité n'est pas une faiblesse.", deltas:{charme:3}}},
+    {label:"Serrer les dents sans un mot", success:{text:"Tu grandis un peu, ce jour-là.", deltas:{courage:4}}},
+    {label:"Analyser ce qui a causé la chute", success:{text:"Tu comprends mieux ton environnement.", deltas:{sagesse:4}}},
+    {label:"En rire avec les autres enfants", success:{text:"L'incident devient une bonne histoire à raconter.", deltas:{chance:3}}},
+  ]),
+  F('nj2',"Le chant des Atokirina","Des esprits des arbres se posent sur toi, un présage rare.",[
+    {label:"Rester parfaitement immobile", success:{text:"Le moment semble s'étirer, sacré.", deltas:{harmonie:5}}},
+    {label:"Courir prévenir la Tsahìk", success:{text:"Elle t'explique la signification du présage.", deltas:{sagesse:4}}},
+    {label:"Suivre où ils te mènent", chance:50, chanceStat:'chance',
+     success:{text:"Ils te guident vers un lieu sacré méconnu.", deltas:{harmonie:7}, reputationDelta:5},
+     fail:{text:"Ils se dispersent avant que tu ne comprennes où aller.", deltas:{harmonie:-2,sagesse:1}}},
+    {label:"Les suivre des yeux, silencieux(se)", success:{text:"Tu gardes ce moment précieux pour toi.", deltas:{chance:3}}},
+  ]),
+  F('nj3',"Rivalité entre enfants du clan","Un autre enfant te défie devant tout le monde.",[
+    {label:"Accepter le défi physique", chance:50, chanceStat:'force',
+     success:{text:"Tu l'emportes et gagnes le respect du groupe.", deltas:{force:6}, reputationDelta:4},
+     fail:{text:"Tu perds, mais tu apprends l'humilité.", deltas:{force:-2}, reputationDelta:-2}},
+    {label:"Répondre par les mots plutôt que la force", success:{text:"Ta répartie désamorce la tension.", deltas:{charme:5}}},
+    {label:"Ignorer superbement la provocation", success:{text:"Ton calme impressionne plus qu'un combat.", deltas:{sagesse:4}}},
+    {label:"Proposer une épreuve plus juste pour vous deux", success:{text:"Vous finissez presque amis.", deltas:{charme:3,sagesse:2}}},
+  ]),
+  F('nj4',"Une première chasse ratée","Ta première sortie de chasse tourne mal.",[
+    {label:"Persévérer malgré l'échec", success:{text:"Ta détermination impressionne les chasseurs.", deltas:{courage:5}}},
+    {label:"Demander conseil à un aîné", success:{text:"Tu apprends une technique précieuse.", deltas:{sagesse:5}}},
+    {label:"Te décourager un temps", success:{text:"Tu relativises après quelques jours.", deltas:{harmonie:-2,sagesse:2}}},
+    {label:"Blâmer la malchance et retenter aussitôt", chance:45, chanceStat:'chance',
+     success:{text:"Cette fois, la chance tourne enfin.", deltas:{chance:6}},
+     fail:{text:"Non, décidément, pas aujourd'hui.", deltas:{chance:-2,sagesse:1}}},
+  ]),
+  F('nj5',"Un jeu dangereux","Les autres enfants te mettent au défi de sauter d'une racine haute.",[
+    {label:"Sauter sans hésiter", chance:55, chanceStat:'courage',
+     success:{text:"Un saut parfait, sous les acclamations.", deltas:{courage:5}, reputationDelta:3},
+     fail:{text:"Tu te réceptionnes mal et te fais mal à la cheville.", deltas:{force:-2}}},
+    {label:"Refuser calmement", success:{text:"Tu n'as rien à prouver à personne.", deltas:{sagesse:3}}},
+    {label:"Proposer un défi moins risqué", success:{text:"Le groupe accepte volontiers ton idée.", deltas:{charme:3}}},
+    {label:"Regarder les autres essayer d'abord", success:{text:"Prudent, tu observes avant d'agir.", deltas:{sagesse:2}}},
+  ]),
+  F('nj6',"Une leçon de chant sacré","La Tsahìk te propose d'apprendre un chant rare.",[
+    {label:"T'investir totalement dans l'apprentissage", success:{text:"Ta voix progresse à vue d'œil.", deltas:{harmonie:5,charme:2}}},
+    {label:"Écouter poliment sans vraiment t'investir", success:{text:"Tu retiens l'essentiel, sans plus.", deltas:{sagesse:2}}},
+    {label:"Proposer d'apprendre un autre chant à ta façon", success:{text:"Ton originalité surprend, mais plaît.", deltas:{charme:4}}},
+    {label:"Préférer observer un autre enfant apprendre", success:{text:"Tu retiens beaucoup en regardant faire.", deltas:{sagesse:3}}},
+  ]),
+  F('nj7',"Une compétition de grimpe","Les enfants du clan s'affrontent pour grimper le plus haut.",[
+    {label:"Grimper le plus vite possible", chance:50, chanceStat:'force',
+     success:{text:"Tu remportes la compétition haut la main.", deltas:{force:5}, reputationDelta:4},
+     fail:{text:"Tu glisses à mi-hauteur, un peu déçu(e).", deltas:{force:-1,sagesse:1}}},
+    {label:"Grimper prudemment, sans te presser", success:{text:"Tu arrives bon dernier, mais entier(ère).", deltas:{sagesse:3}}},
+    {label:"Encourager les autres plutôt que participer", success:{text:"Ta bonne humeur motive tout le monde.", deltas:{charme:4}}},
+    {label:"Inventer une nouvelle règle plus amusante", success:{text:"Ton idée relance le jeu pour tous.", deltas:{charme:3,chance:1}}},
+  ]),
+];
+const NAVI_ADULTE = [
+  F('na1',"Une saison de sécheresse","L'eau se raréfie, le clan s'inquiète.",[
+    {label:"Organiser une expédition pour trouver de nouvelles sources", chance:50, chanceStat:'sagesse',
+     success:{text:"Une nouvelle source est découverte grâce à toi.", deltas:{sagesse:7}, reputationDelta:8},
+     fail:{text:"L'expédition revient bredouille.", deltas:{harmonie:-3,sagesse:1}}},
+    {label:"Prier et jeûner avec les Anciens", success:{text:"Le clan se resserre dans l'épreuve.", deltas:{harmonie:6}}},
+    {label:"Partager tes réserves personnelles", success:{text:"Ton geste est remarqué et salué.", deltas:{charme:5}, reputationDelta:4}},
+    {label:"Rationner discrètement tes propres réserves", success:{text:"Tu t'en sors, mais on te le reprochera un peu.", deltas:{chance:3}, reputationDelta:-3}},
+  ]),
+  F('na2',"Un différend au sein du clan","Deux familles s'opposent sur une décision importante.",[
+    {label:"Prendre parti fermement", success:{text:"Ton camp l'emporte, l'autre s'en souvient.", deltas:{force:3}, reputationDelta:3}},
+    {label:"Tenter une médiation", success:{text:"Un compromis est trouvé grâce à toi.", deltas:{sagesse:6}, reputationDelta:5}},
+    {label:"Rester en retrait, sans prendre parti", success:{text:"Tu évites soigneusement les remous.", deltas:{chance:3}}},
+    {label:"Proposer un vote collectif", success:{text:"Le clan salue cette idée d'équité.", deltas:{charme:4,sagesse:2}}},
+  ]),
+  F('na3',"Un étranger demande l'hospitalité","Un voyageur d'un autre clan demande refuge.",[
+    {label:"L'accueillir chaleureusement", success:{text:"Une amitié durable naît de cette rencontre.", deltas:{charme:5,harmonie:3}}},
+    {label:"Te méfier et le surveiller", success:{text:"Ta prudence s'avère justifiée, ou pas.", deltas:{sagesse:4}}},
+    {label:"Le questionner longuement avant de décider", success:{text:"Tu apprends beaucoup sur son clan d'origine.", deltas:{sagesse:5}}},
+    {label:"Le refuser poliment", success:{text:"Certains trouvent ta décision trop dure.", deltas:{chance:2}, reputationDelta:-2}},
+  ]),
+  F('na4',"La maladie frappe le clan","Un mal étrange touche plusieurs membres du clan.",[
+    {label:"Soigner les malades toi-même", chance:50, chanceStat:'sagesse',
+     success:{text:"Tes soins sauvent plusieurs vies.", deltas:{sagesse:8}, reputationDelta:10},
+     fail:{text:"Malgré tes efforts, tu ne peux pas tout guérir.", deltas:{harmonie:-4,sagesse:1}}},
+    {label:"Isoler les malades par précaution", success:{text:"La propagation est freinée.", deltas:{sagesse:4}}},
+    {label:"Chercher un remède dans la forêt", chance:45, chanceStat:'chance',
+     success:{text:"Une plante rare fait des merveilles.", deltas:{chance:7}, reputationDelta:6},
+     fail:{text:"Tu reviens les mains vides.", deltas:{chance:-3,sagesse:1}}},
+    {label:"Prier Eywa pour leur guérison", success:{text:"L'espoir du clan se renforce.", deltas:{harmonie:6}}},
+  ]),
+  F('na5',"Une belle récolte","La saison a été généreuse cette année.",[
+    {label:"Organiser une grande fête pour le clan", success:{text:"Une soirée mémorable rassemble tout le monde.", deltas:{charme:4}, reputationDelta:4}},
+    {label:"Faire des réserves pour l'hiver", success:{text:"Ta prévoyance rassure les Anciens.", deltas:{sagesse:4}}},
+    {label:"Partager le surplus avec un clan voisin", success:{text:"Un geste de générosité qui renforce les liens.", deltas:{harmonie:4}, reputationDelta:3}},
+    {label:"Investir ce temps libre dans ta formation", success:{text:"Tu progresses pendant que d'autres se reposent.", deltas:{sagesse:3}}},
+  ]),
+  F('na6',"Un conflit de territoire","Un clan voisin conteste une zone de chasse.",[
+    {label:"Défendre fermement le territoire", chance:50, chanceStat:'force',
+     success:{text:"Le clan voisin recule devant ta détermination.", deltas:{force:6}, reputationDelta:8},
+     fail:{text:"L'affrontement tourne court et personne n'y gagne.", deltas:{force:-2,sagesse:1}}},
+    {label:"Proposer un partage du territoire", success:{text:"Un accord raisonnable satisfait les deux clans.", deltas:{sagesse:6}, reputationDelta:5}},
+    {label:"Laisser les Anciens trancher", success:{text:"Tu t'en remets à la sagesse collective.", deltas:{sagesse:3}}},
+    {label:"Ignorer la dispute et chasser ailleurs", success:{text:"Tu évites le conflit, sans le résoudre.", deltas:{chance:2}}},
+  ]),
+  F('na7',"Une naissance dans le clan","Un enfant vient de naître chez des proches.",[
+    {label:"Participer activement à la cérémonie", success:{text:"Ta présence est chaleureusement remarquée.", deltas:{charme:3}, reputationDelta:3}},
+    {label:"Offrir un présent fait de tes mains", success:{text:"Ton geste touche toute la famille.", deltas:{charme:4}}},
+    {label:"Proposer ton aide pour les premiers mois", success:{text:"Ta générosité renforce les liens du clan.", deltas:{harmonie:4}, reputationDelta:2}},
+    {label:"Célébrer discrètement, à ta façon", success:{text:"Tu te réjouis sincèrement, sans grand geste.", deltas:{harmonie:2}}},
+  ]),
+  F('na8',"Une proposition d'échange","Un clan voisin propose un troc inhabituel.",[
+    {label:"Accepter l'échange tel quel", chance:55, chanceStat:'chance',
+     success:{text:"L'échange s'avère très avantageux.", deltas:{chance:6}, reputationDelta:3},
+     fail:{text:"Tu réalises trop tard que tu t'es fait avoir.", deltas:{chance:-3,sagesse:2}}},
+    {label:"Négocier de meilleures conditions", success:{text:"Ta fermeté paie, l'accord est équilibré.", deltas:{sagesse:4,charme:2}}},
+    {label:"Décliner poliment l'offre", success:{text:"Tu préfères ne rien devoir à personne.", deltas:{sagesse:2}}},
+    {label:"Consulter le clan avant de répondre", success:{text:"La décision collective rassure tout le monde.", deltas:{charme:3}, reputationDelta:2}},
+  ]),
+  F('na9',"Un rêve prophétique","Un rêve étrangement vivide te hante à ton réveil.",[
+    {label:"Le raconter à la Tsahìk", success:{text:"Elle y voit un signe important pour toi.", deltas:{harmonie:5,sagesse:2}}},
+    {label:"Le garder secret", success:{text:"Tu médites seul(e) sur sa signification.", deltas:{sagesse:4}}},
+    {label:"Le peindre ou le sculpter", success:{text:"Ton œuvre impressionne le clan.", deltas:{charme:4}, reputationDelta:2}},
+    {label:"L'oublier et continuer ta journée", success:{text:"Ce n'était peut-être qu'un rêve, après tout.", deltas:{chance:2}}},
+  ]),
+  F('na10',"La perte d'un objet sacré","Un objet précieux transmis par tes aînés a disparu.",[
+    {label:"Partir à sa recherche sans attendre", chance:50, chanceStat:'chance',
+     success:{text:"Tu le retrouves après une longue quête.", deltas:{chance:5}, reputationDelta:4},
+     fail:{text:"Il reste introuvable, une vraie déception.", deltas:{harmonie:-3,sagesse:2}}},
+    {label:"Accepter la perte avec philosophie", success:{text:"Tu comprends que rien n'est éternel.", deltas:{sagesse:5}}},
+    {label:"Demander l'aide du clan pour chercher", success:{text:"Ensemble, vous fouillez chaque recoin.", deltas:{charme:3,harmonie:2}}},
+    {label:"En fabriquer un nouveau, différent", success:{text:"Ta création devient un symbole à toi.", deltas:{charme:4}}},
+  ]),
+  F('na11',"Un concours de chant", "Le clan organise une joute de chants improvisés.",[
+    {label:"Participer avec audace", chance:50, chanceStat:'charme',
+     success:{text:"Ton chant impressionne toute l'assemblée.", deltas:{charme:6}, reputationDelta:5},
+     fail:{text:"Ta voix se casse au pire moment, un peu gênant.", deltas:{charme:-2,sagesse:1}}},
+    {label:"Composer un chant pour quelqu'un d'autre", success:{text:"Ton geste touche la personne concernée.", deltas:{harmonie:3,charme:2}}},
+    {label:"Te contenter d'écouter et d'applaudir", success:{text:"Tu profites simplement du moment.", deltas:{harmonie:2}}},
+    {label:"Juger la compétition avec les Anciens", success:{text:"Ton avis est pris au sérieux.", deltas:{sagesse:3}, reputationDelta:2}},
+  ]),
+  F('na12',"Une tempête approche","Le ciel s'assombrit dangereusement au-dessus du camp.",[
+    {label:"Organiser la mise à l'abri de tous", chance:55, chanceStat:'sagesse',
+     success:{text:"Grâce à toi, personne n'est blessé.", deltas:{sagesse:6}, reputationDelta:6},
+     fail:{text:"La tempête cause quelques dégâts malgré tes efforts.", deltas:{harmonie:-2,sagesse:2}}},
+    {label:"Sécuriser d'abord ta propre famille", success:{text:"Les tiens sont en sécurité, au moins.", deltas:{harmonie:3}}},
+    {label:"Braver la tempête pour sauver des biens précieux", chance:40, chanceStat:'courage',
+     success:{text:"Tu ramènes l'essentiel, trempé(e) mais fier(ère).", deltas:{courage:5}, reputationDelta:4},
+     fail:{text:"Tu rentres bredouille et un peu secoué(e).", deltas:{courage:-2}}},
+    {label:"Attendre patiemment que ça passe", success:{text:"La prudence a parfois du bon.", deltas:{sagesse:2}}},
+  ]),
+  F('na13',"Un animal totem t'observe","Une créature rare et majestueuse te fixe depuis les fourrés.",[
+    {label:"Soutenir son regard sans bouger", success:{text:"Un lien silencieux semble se tisser.", deltas:{harmonie:5}}},
+    {label:"T'incliner respectueusement", success:{text:"L'animal s'éloigne, comme satisfait.", deltas:{sagesse:3,harmonie:2}}},
+    {label:"Le suivre discrètement", chance:45, chanceStat:'chance',
+     success:{text:"Il te mène vers un endroit surprenant.", deltas:{chance:6}, reputationDelta:3},
+     fail:{text:"Il disparaît dans la végétation avant que tu ne comprennes.", deltas:{chance:-2}}},
+    {label:"Repartir sans t'attarder", success:{text:"Tu gardes ce souvenir pour toi.", deltas:{sagesse:2}}},
+  ]),
+  F('na14',"Une opportunité d'enseigner","On te propose de transmettre ton savoir à un groupe de jeunes.",[
+    {label:"Accepter avec enthousiasme", success:{text:"Tes élèves progressent vite, et toi aussi.", deltas:{sagesse:5,charme:2}}, reputationDelta:3},
+    {label:"Décliner, ce n'est pas ton domaine", success:{text:"Tu préfères te concentrer sur autre chose.", deltas:{sagesse:2}}},
+    {label:"Proposer d'enseigner à ta façon, différemment", success:{text:"Ta méthode surprend, mais fonctionne bien.", deltas:{charme:4,sagesse:2}}},
+    {label:"Accepter, mais seulement à temps partiel", success:{text:"Un bon équilibre entre transmission et vie personnelle.", deltas:{sagesse:3,harmonie:2}}},
+  ]),
+  F('na15',"Un vieux différend refait surface","Une querelle ancienne avec un autre membre du clan revient sur le tapis.",[
+    {label:"Aller t'excuser, même après tout ce temps", success:{text:"La réconciliation apaise un vieux poids.", deltas:{harmonie:5,charme:2}}},
+    {label:"Rester campé(e) sur ta position", success:{text:"Rien ne change, mais tu ne cèdes pas.", deltas:{courage:2}}},
+    {label:"Demander à un tiers de médiatiser", success:{text:"Un regard extérieur aide à apaiser les choses.", deltas:{sagesse:4}}},
+    {label:"Laisser le temps continuer son œuvre", success:{text:"Certaines blessures se referment doucement.", deltas:{sagesse:3}}},
+  ]),
+  F('na16',"La visite d'un clan lointain","Des voyageurs d'un clan que tu ne connais pas arrivent au camp.",[
+    {label:"Leur faire visiter fièrement ton territoire", success:{text:"Ton hospitalité forge une bonne réputation.", deltas:{charme:4}, reputationDelta:4}},
+    {label:"Les observer avec prudence à distance", success:{text:"Tu apprends beaucoup sans prendre de risque.", deltas:{sagesse:4}}},
+    {label:"Échanger des récits et des chants avec eux", success:{text:"Une soirée mémorable de partage culturel.", deltas:{harmonie:4,charme:2}}},
+    {label:"Leur proposer un échange de techniques de chasse", success:{text:"Vous progressez mutuellement.", deltas:{force:3,sagesse:2}}},
+  ]),
+  F('na17',"Organiser le rite d'un jeune","On te demande d'aider à préparer le rite de passage d'un adolescent du clan.",[
+    {label:"T'investir pleinement dans les préparatifs", success:{text:"Le rite se déroule à la perfection.", deltas:{sagesse:4}, reputationDelta:4}},
+    {label:"Transmettre tes propres souvenirs de ce jour", success:{text:"Ton témoignage touche profondément le jeune.", deltas:{charme:4,harmonie:2}}},
+    {label:"Laisser d'autres s'en charger cette fois", success:{text:"Tu fais confiance à la nouvelle génération.", deltas:{sagesse:2}}},
+    {label:"Proposer une variante audacieuse du rituel", chance:45, chanceStat:'chance',
+     success:{text:"Ton idée est saluée comme une belle innovation.", deltas:{chance:5,charme:2}},
+     fail:{text:"L'idée ne convainc pas vraiment les Anciens.", deltas:{chance:-2}}},
+  ]),
+  F('na18',"Une saison de chasse exceptionnelle","Le gibier abonde cette année comme jamais.",[
+    {label:"Chasser sans relâche pour en profiter", success:{text:"Tes réserves n'ont jamais été aussi pleines.", deltas:{force:4}, reputationDelta:2}},
+    {label:"Prendre seulement ce dont tu as besoin", success:{text:"Ton respect de l'équilibre naturel est remarqué.", deltas:{harmonie:5}, reputationDelta:3}},
+    {label:"Enseigner tes techniques aux plus jeunes chasseurs", success:{text:"Tu formes la relève avec plaisir.", deltas:{sagesse:3,charme:2}}},
+    {label:"Profiter de ce temps libre pour te reposer", success:{text:"Une pause bien méritée.", deltas:{harmonie:3}}},
+  ]),
+  F('na19',"Un doute sur ta propre voie","Tu te demandes soudain si tu as fait les bons choix jusqu'ici.",[
+    {label:"En parler ouvertement avec un proche", success:{text:"Cette conversation t'apaise sincèrement.", deltas:{charme:3,sagesse:2}}},
+    {label:"Méditer seul(e) en pleine nature", success:{text:"Le calme de la forêt t'aide à y voir plus clair.", deltas:{harmonie:4}}},
+    {label:"Te lancer dans un nouveau défi pour te prouver quelque chose", chance:50, chanceStat:'courage',
+     success:{text:"Ce nouveau défi relevé te redonne confiance.", deltas:{courage:5}},
+     fail:{text:"L'échec renforce un peu plus ton doute.", deltas:{courage:-2,sagesse:2}}},
+    {label:"Accepter simplement ce doute, sans chercher à le résoudre", success:{text:"Tu fais la paix avec l'incertitude.", deltas:{sagesse:4}}},
+  ]),
+];
+const NAVI_ANCIEN = [
+  F('nc1',"Un jeune te demande conseil","Un jeune du clan, perdu, vient te voir.",[
+    {label:"Lui raconter tes propres échecs", success:{text:"Ta sincérité le touche profondément.", deltas:{sagesse:5}, reputationDelta:4}},
+    {label:"Le guider fermement", success:{text:"Il repart avec une direction claire.", deltas:{courage:3}, reputationDelta:3}},
+    {label:"L'écouter sans juger", success:{text:"Il se sent enfin compris.", deltas:{charme:5}}},
+    {label:"Le renvoyer vers un autre ancien plus expérimenté", success:{text:"Tu estimes que ce n'est pas ton domaine.", deltas:{chance:2}}},
+  ]),
+  F('nc2',"Les souvenirs reviennent","Les vieux souvenirs de ta vie ressurgissent, doux ou amers.",[
+    {label:"Les partager en conte au clan", success:{text:"Ton récit fascine petits et grands.", deltas:{charme:5}, reputationDelta:5}},
+    {label:"Les garder pour toi", success:{text:"Tu les chéris en silence.", deltas:{sagesse:4}}},
+    {label:"Les coucher dans un chant", success:{text:"Ta mélodie restera dans les mémoires.", deltas:{harmonie:5}}},
+    {label:"En parler à un seul proche de confiance", success:{text:"Un moment d'intimité précieux.", deltas:{sagesse:3,harmonie:2}}},
+  ]),
+  F('nc3',"Le corps se fait plus lent","L'âge commence à peser sur tes gestes.",[
+    {label:"Continuer comme si de rien n'était", success:{text:"Ta détermination forcée le respect.", deltas:{courage:3}}},
+    {label:"Accepter de l'aide des plus jeunes", success:{text:"Tu apprends à accepter la transmission inverse.", deltas:{sagesse:4}}},
+    {label:"Te consacrer à des tâches plus calmes", success:{text:"Tu trouves un nouveau rôle, plus paisible.", deltas:{harmonie:3}}},
+    {label:"En rire avec les autres Anciens", success:{text:"L'humour adoucit le poids des ans.", deltas:{charme:3}}},
+  ]),
+  F('nc4',"Un différend familial","Deux de tes proches se disputent, et te demandent d'arbitrer.",[
+    {label:"Trancher fermement en ton âme et conscience", success:{text:"Ta décision, bien que dure, apaise la situation.", deltas:{sagesse:5}, reputationDelta:3}},
+    {label:"Écouter longuement chaque partie", success:{text:"Ta patience désamorce peu à peu le conflit.", deltas:{charme:4}}},
+    {label:"Refuser de choisir un camp", success:{text:"Tu préfères ne pas t'en mêler.", deltas:{chance:2}}},
+    {label:"Proposer un compromis équitable", success:{text:"Les deux parties repartent satisfaites.", deltas:{sagesse:4,charme:2}}},
+  ]),
+  F('nc5',"Une vision troublante","Une vision inhabituelle te traverse durant une méditation.",[
+    {label:"En parler ouvertement au conseil du clan", success:{text:"Tes mots sont accueillis avec grand respect.", deltas:{sagesse:5}, reputationDelta:4}},
+    {label:"La garder pour toi, par prudence", success:{text:"Tu préfères la laisser mûrir en silence.", deltas:{sagesse:3}}},
+    {label:"La transmettre uniquement à la Tsahìk", success:{text:"Un échange privé, mais précieux.", deltas:{harmonie:4}}},
+    {label:"L'interpréter à ta façon, sans en parler", success:{text:"Tu en tires ta propre sagesse.", deltas:{sagesse:4}}},
+  ]),
+  F('nc6',"Un ancien rival vient te voir","Quelqu'un avec qui tu as eu des différends, jadis, te rend visite.",[
+    {label:"L'accueillir avec un cœur ouvert", success:{text:"De vieilles blessures se referment enfin.", deltas:{harmonie:5,charme:2}}},
+    {label:"Rester poli mais distant(e)", success:{text:"La rencontre reste correcte, sans plus.", deltas:{sagesse:2}}},
+    {label:"Lui rappeler le passé sans détour", success:{text:"Un échange franc, parfois difficile à entendre.", deltas:{courage:3}}},
+    {label:"Refuser de le/la recevoir", success:{text:"Certains regrettent ta fermeté.", deltas:{chance:1}, reputationDelta:-2}},
+  ]),
+  F('nc7',"La récolte de tes graines","Le moment est venu de choisir ce que tu transmets aux tiens.",[
+    {label:"Offrir tes outils à un jeune prometteur", success:{text:"Ton geste marque durablement le clan.", deltas:{charme:4}, reputationDelta:4}},
+    {label:"Répartir équitablement entre tous tes proches", success:{text:"Personne ne se sent lésé.", deltas:{sagesse:4,harmonie:2}}},
+    {label:"Garder tes biens encore un peu", success:{text:"Rien ne presse, penses-tu.", deltas:{chance:2}}},
+    {label:"En faire don au clan tout entier", success:{text:"Un geste de générosité qui marque les esprits.", deltas:{harmonie:5}, reputationDelta:5}},
+  ]),
+  F('nc8',"Une nuit d'insomnie", "Le sommeil te fuit, et les pensées affluent.",[
+    {label:"Sortir marcher sous les étoiles", success:{text:"Le calme nocturne t'apaise l'esprit.", deltas:{harmonie:4}}},
+    {label:"Réveiller un proche pour discuter", success:{text:"Une conversation nocturne inattendue et douce.", deltas:{charme:3}}},
+    {label:"Méditer jusqu'au lever du jour", success:{text:"Tu trouves une paix intérieure rare.", deltas:{sagesse:4}}},
+    {label:"Te forcer à te rendormir", success:{text:"Le sommeil finit par revenir, tant bien que mal.", deltas:{sagesse:2}}},
+  ]),
+  F('nc9',"Un jeune couple te demande bénédiction","Deux jeunes du clan souhaitent ton approbation pour leur union.",[
+    {label:"La leur accorder avec joie", success:{text:"Ta bénédiction les comble de bonheur.", deltas:{charme:4,harmonie:2}}, reputationDelta:3},
+    {label:"Les questionner longuement d'abord", success:{text:"Ta prudence rassure tout le monde ensuite.", deltas:{sagesse:4}}},
+    {label:"Leur offrir un conseil de vie plutôt qu'une simple bénédiction", success:{text:"Tes mots les accompagneront longtemps.", deltas:{sagesse:3,charme:2}}},
+    {label:"Laisser cette décision à d'autres Anciens", success:{text:"Tu préfères ne pas t'impliquer cette fois.", deltas:{chance:2}}},
+  ]),
+  F('nc10',"Le poids des responsabilités passées","Une décision que tu as prise il y a longtemps refait surface dans les esprits.",[
+    {label:"L'assumer pleinement, sans détour", success:{text:"Ta franchise force le respect.", deltas:{courage:4}, reputationDelta:3}},
+    {label:"Expliquer le contexte de l'époque", success:{text:"Les esprits s'apaisent une fois informés.", deltas:{sagesse:4}}},
+    {label:"Présenter tes excuses si nécessaire", success:{text:"Un geste qui touche profondément le clan.", deltas:{charme:4,harmonie:2}}},
+    {label:"Laisser le temps clore cette page", success:{text:"Certaines choses se résolvent d'elles-mêmes.", deltas:{sagesse:2}}},
+  ]),
+  F('nc11',"Une éclipse au-dessus du camp","Un phénomène céleste rare plonge la forêt dans une pénombre étrange.",[
+    {label:"Y voir un message d'Eywa et méditer", success:{text:"Tu ressens une paix profonde durant ce moment rare.", deltas:{harmonie:5}}},
+    {label:"Rassurer les plus jeunes, effrayés", success:{text:"Ta présence apaise les enfants du camp.", deltas:{charme:4}, reputationDelta:2}},
+    {label:"Observer le phénomène avec un œil scientifique", success:{text:"Tu notes chaque détail avec curiosité.", deltas:{sagesse:4}}},
+    {label:"Continuer tes occupations comme si de rien n'était", success:{text:"Certains admirent ton flegme.", deltas:{chance:2}}},
+  ]),
+  F('nc12',"Une demande de médiation extérieure","Un clan voisin te demande spécifiquement de trancher un différend qui ne te concerne pas.",[
+    {label:"Accepter, honoré(e) par cette confiance", success:{text:"Ta réputation de sagesse dépasse ton propre clan.", deltas:{sagesse:5}, reputationDelta:5}},
+    {label:"Décliner poliment, ce n'est pas ton rôle", success:{text:"Tu préfères rester concentré(e) sur les tiens.", deltas:{sagesse:2}}},
+    {label:"Accepter mais proposer de partager la décision", success:{text:"Une approche collégiale est saluée.", deltas:{charme:3,sagesse:2}}},
+    {label:"Recommander quelqu'un d'autre de confiance", success:{text:"Ton choix se révèle judicieux.", deltas:{sagesse:3}}},
+  ]),
+  F('nc13',"Le chant du dernier Toruk aperçu","Une légende dit qu'apercevoir un Toruk en fin de vie est un signe puissant.",[
+    {label:"Suivre sa trace du regard, ému(e)", success:{text:"Un moment que tu n'oublieras jamais.", deltas:{harmonie:6}}},
+    {label:"Le raconter à tout le clan", success:{text:"Ton récit devient une légende de plus.", deltas:{charme:4}, reputationDelta:3}},
+    {label:"Le garder comme un secret personnel", success:{text:"Tu chéris ce souvenir rien que pour toi.", deltas:{sagesse:3}}},
+    {label:"Y voir un simple hasard, sans plus", success:{text:"Tu restes pragmatique face à ce mystère.", deltas:{chance:2}}},
+  ]),
+  F('nc14',"Une maladie tenace","Un mal t'affaiblit plus que d'habitude cette saison.",[
+    {label:"Te battre avec toute ton énergie restante", chance:55, chanceStat:'force',
+     success:{text:"Tu t'en remets, plus fort(e) que prévu.", deltas:{force:4,courage:2}},
+     fail:{text:"Tu t'en remets, mais affaibli(e) pour un temps.", deltas:{force:-2}, deathChance:4, deathText:"Ton corps ne résiste pas à cette épreuve."}},
+    {label:"Accepter l'aide des soigneurs du clan", success:{text:"Tu guéris grâce à leurs bons soins.", deltas:{sagesse:3,harmonie:2}}},
+    {label:"Continuer tes activités malgré tout", success:{text:"Ta détermination impressionne, à quel prix cependant.", deltas:{courage:3,harmonie:-2}}},
+    {label:"Te reposer pleinement, sans culpabiliser", success:{text:"Ce repos t'aide à retrouver des forces.", deltas:{harmonie:3}}},
+  ]),
+  F('nc15',"Un rituel oublié à faire revivre","Tu te souviens d'un rituel ancien que plus personne ne pratique.",[
+    {label:"Le réintroduire auprès du clan", chance:50, chanceStat:'sagesse',
+     success:{text:"Le rituel renaît, à la joie de tous.", deltas:{sagesse:5}, reputationDelta:4},
+     fail:{text:"Le clan n'est pas très réceptif à cette idée.", deltas:{sagesse:2}, reputationDelta:-1}},
+    {label:"Le pratiquer seul(e), en privé", success:{text:"Tu renoues avec cette tradition à ta façon.", deltas:{harmonie:4}}},
+    {label:"L'enseigner uniquement à un proche", success:{text:"Ce savoir continuera d'exister, discrètement.", deltas:{sagesse:3,charme:2}}},
+    {label:"Le laisser sombrer dans l'oubli", success:{text:"Certaines traditions ont une fin naturelle.", deltas:{sagesse:2}}},
+  ]),
+  F('nc16',"Le départ d'un proche vers un autre clan","Quelqu'un que tu aimes profondément décide de rejoindre un clan lointain.",[
+    {label:"L'encourager malgré la tristesse", success:{text:"Ton soutien compte énormément pour cette personne.", deltas:{charme:4,harmonie:1}}},
+    {label:"Tenter de le/la convaincre de rester", chance:40, chanceStat:'charme',
+     success:{text:"Tes mots le/la font finalement changer d'avis.", deltas:{charme:5,harmonie:3}},
+     fail:{text:"Ta tentative ne change rien à sa décision.", deltas:{harmonie:-2}}},
+    {label:"Accepter cette décision en silence", success:{text:"Tu respectes son choix, même si ça pèse.", deltas:{sagesse:3}}},
+    {label:"Organiser une grande fête d'adieu", success:{text:"Un dernier souvenir chaleureux, avant la séparation.", deltas:{charme:3}, reputationDelta:2}},
+  ]),
+  F('nc17',"Un objet du passé retrouvé","On retrouve, en rangeant, un objet lié à un souvenir marquant de ta jeunesse.",[
+    {label:"Le ranger précieusement", success:{text:"Ce souvenir a toujours sa place dans ton cœur.", deltas:{harmonie:3}}},
+    {label:"Le donner à quelqu'un de plus jeune", success:{text:"L'objet trouve un nouveau sens, une nouvelle vie.", deltas:{charme:3}}},
+    {label:"Raconter son histoire à qui veut l'entendre", success:{text:"Ton récit fascine petits et grands.", deltas:{charme:4}, reputationDelta:2}},
+    {label:"Le laisser de côté, sans s'y attarder", success:{text:"Certains souvenirs n'ont pas besoin d'être ravivés.", deltas:{sagesse:2}}},
+  ]),
+  F('nc18',"Une nouvelle génération de chasseurs","Un groupe de jeunes chasseurs impétueux te demande de les accompagner.",[
+    {label:"Accepter et leur montrer tes vieilles techniques", success:{text:"Ton expérience les impressionne beaucoup.", deltas:{sagesse:4,force:1}, reputationDelta:2}},
+    {label:"Décliner, ton temps de chasse est révolu", success:{text:"Tu préfères leur laisser ce terrain.", deltas:{sagesse:2}}},
+    {label:"Les observer sans intervenir", success:{text:"Tu apprends beaucoup en les regardant faire.", deltas:{sagesse:3}}},
+    {label:"Leur raconter une histoire de chasse mémorable", success:{text:"Ton récit les motive avant leur départ.", deltas:{charme:3}}},
+  ]),
+  F('nc19',"Le silence de la forêt","Une étrange quiétude s'installe dans la forêt, inhabituelle.",[
+    {label:"Aller enquêter par toi-même", chance:45, chanceStat:'sagesse',
+     success:{text:"Tu comprends ce changement avant les autres.", deltas:{sagesse:5}, reputationDelta:3},
+     fail:{text:"Tu ne trouves aucune explication satisfaisante.", deltas:{sagesse:2}}},
+    {label:"En parler au conseil du clan", success:{text:"Ensemble, vous restez vigilants.", deltas:{sagesse:3,harmonie:2}}},
+    {label:"Profiter simplement de ce calme inhabituel", success:{text:"Un moment de paix rare et précieux.", deltas:{harmonie:4}}},
+    {label:"Alerter les chasseurs par précaution", success:{text:"Ta prudence rassure le clan.", deltas:{sagesse:2}, reputationDelta:2}},
+  ]),
+  F('nc20',"Une dernière leçon à donner","Tu sens qu'il est temps de transmettre quelque chose d'essentiel.",[
+    {label:"Réunir les jeunes du clan pour un grand enseignement", success:{text:"Ce moment marquera durablement leurs mémoires.", deltas:{sagesse:5,charme:2}, reputationDelta:4}},
+    {label:"Choisir une seule personne à qui tout transmettre", success:{text:"Un lien de confiance unique se scelle.", deltas:{sagesse:4,harmonie:2}}},
+    {label:"L'écrire ou le chanter pour la postérité", success:{text:"Ton enseignement traversera les générations.", deltas:{charme:3,sagesse:2}}},
+    {label:"Attendre encore le bon moment", success:{text:"Tu sens que ce n'est pas encore l'heure.", deltas:{sagesse:2}}},
+  ]),
+];
+const HUMAN_JEUNESSE = [
+
+
+  F('hj1',"Un premier échec scolaire","Un échec qui pique, mais qui forme.",[
+    {label:"Redoubler d'efforts", success:{text:"Ta persévérance finit par payer.", deltas:{sagesse:5}}},
+    {label:"Te tourner vers autre chose", success:{text:"Tu découvres une autre voie qui te plaît.", deltas:{chance:4}}},
+    {label:"Demander de l'aide", success:{text:"Le soutien de tes proches fait la différence.", deltas:{charme:4}}},
+    {label:"En tirer une leçon d'humilité", success:{text:"Tu relativises et repars du bon pied.", deltas:{courage:3}}},
+  ]),
+  F('hj2',"Une amitié précieuse","Une amitié qui marquera longtemps.",[
+    {label:"Tout partager avec cet ami", success:{text:"Un lien fort et durable se crée.", deltas:{charme:5}}},
+    {label:"Garder une certaine distance", success:{text:"Tu restes prudent(e), mais fidèle.", deltas:{sagesse:4}}},
+    {label:"L'aider dans un moment difficile", success:{text:"Ton geste ne sera jamais oublié.", deltas:{charme:4}, reputationDelta:3}},
+    {label:"Profiter du moment présent, sans trop réfléchir", success:{text:"Vous passez un très bon moment ensemble.", deltas:{chance:2}}},
+  ]),
+  F('hj3',"Un accident évité de justesse","Le cœur battant, tu réalises à quel point ça aurait pu mal tourner.",[
+    {label:"En tirer une leçon de prudence", success:{text:"Tu es plus attentif(ve) désormais.", deltas:{sagesse:5}}},
+    {label:"Repousser aussitôt la peur", success:{text:"Tu continues comme si de rien n'était.", deltas:{courage:4}}},
+    {label:"En parler à tes proches", success:{text:"Partager l'émotion t'aide à l'apaiser.", deltas:{charme:3}}},
+    {label:"Tenter ta chance à nouveau, plus téméraire", chance:50, chanceStat:'chance',
+     success:{text:"Cette fois, tout se passe bien.", deltas:{courage:5}},
+     fail:{text:"Tu comprends enfin qu'il fallait ralentir.", deltas:{courage:-3,sagesse:2}}},
+  ]),
+  F('hj4',"Une première petite amourette","Un premier émoi, léger et maladroit.",[
+    {label:"Te lancer et lui écrire", chance:55, chanceStat:'charme',
+     success:{text:"Une belle petite histoire commence.", deltas:{charme:4}},
+     fail:{text:"Pas de réponse. Le cœur se console vite à cet âge.", deltas:{charme:-1,sagesse:1}}},
+    {label:"Rester timide et n'en parler à personne", success:{text:"Tu gardes ce secret pour toi.", deltas:{sagesse:2}}},
+    {label:"En parler à un(e) ami(e) proche", success:{text:"Ça fait du bien d'en parler.", deltas:{charme:2}}},
+    {label:"Te concentrer sur une passion à toi", success:{text:"Tu canalises ton énergie ailleurs.", deltas:{sagesse:2}}},
+  ]),
+  F('hj5',"Une compétition sportive","Une occasion de te mesurer aux autres.",[
+    {label:"Tout donner pour gagner", chance:50, chanceStat:'force',
+     success:{text:"Une victoire méritée, sous les applaudissements.", deltas:{force:5}, reputationDelta:4},
+     fail:{text:"Tu perds, mais tu apprends à encaisser la défaite.", deltas:{force:-1,sagesse:1}}},
+    {label:"Jouer surtout pour le plaisir", success:{text:"Tu passes un bon moment, peu importe le résultat.", deltas:{charme:3}}},
+    {label:"Encourager tes coéquipiers avant tout", success:{text:"Ton esprit d'équipe est remarqué.", deltas:{charme:4}}},
+    {label:"Analyser tes erreurs pour la prochaine fois", success:{text:"Tu progresses en observant chaque détail.", deltas:{sagesse:3}}},
+  ]),
+];
+const HUMAN_ADULTE = [
+  F('ha1',"Une crise financière","Les fins de mois deviennent difficiles.",[
+    {label:"Économiser drastiquement", success:{text:"Tu t'en sors par la rigueur.", deltas:{sagesse:5}}},
+    {label:"Prendre un risque financier", chance:45, chanceStat:'chance',
+     success:{text:"Le pari, risqué, finit par payer.", deltas:{chance:8}},
+     fail:{text:"Le pari échoue et te coûte cher.", deltas:{chance:-5,sagesse:2}}},
+    {label:"Demander de l'aide à tes proches", success:{text:"Le soutien familial te sort d'affaire.", deltas:{charme:4}}},
+    {label:"Changer complètement de métier", success:{text:"Un nouveau départ, exigeant mais libérateur.", deltas:{courage:4,chance:2}}},
+  ]),
+  F('ha2',"Un choix moral au travail","Tu es témoin de quelque chose qui te dérange profondément.",[
+    {label:"Dénoncer une injustice au risque de ta carrière", chance:45, chanceStat:'courage',
+     success:{text:"Ton courage est finalement récompensé.", deltas:{courage:5}, reputationDelta:10},
+     fail:{text:"Cela te coûte cher professionnellement.", reputationDelta:-8, deltas:{courage:1}}},
+    {label:"Fermer les yeux pour préserver ta place", success:{text:"Tu gardes ton poste, mais un poids sur la conscience.", deltas:{chance:3}, reputationDelta:-3}},
+    {label:"En parler discrètement à un supérieur de confiance", success:{text:"Les choses s'arrangent sans éclat.", deltas:{sagesse:5}}},
+    {label:"Chercher un autre poste ailleurs", success:{text:"Tu tournes la page proprement.", deltas:{chance:4}}},
+  ]),
+  F('ha3',"Une amitié avec un(e) Na'vi","Une rencontre inattendue qui bouscule ta vision du monde.",[
+    {label:"Apprendre sa langue et ses coutumes", success:{text:"Un monde nouveau s'ouvre à toi.", deltas:{sagesse:5,harmonie:4}}},
+    {label:"Rester poli(e) mais distant(e)", success:{text:"Tu gardes tes distances, par prudence.", deltas:{chance:2}}},
+    {label:"L'inviter à découvrir le monde humain", success:{text:"Un échange rare et précieux.", deltas:{charme:5}}},
+    {label:"Devenir des allié(e)s véritables", success:{text:"Un lien de confiance solide se construit.", deltas:{harmonie:6}, reputationDelta:5}},
+  ]),
+  F('ha4',"Une blessure ou une maladie passagère","Ton corps te rappelle qu'il a des limites.",[
+    {label:"Te battre avec force pour t'en sortir", success:{text:"Tu t'en remets, plus fort(e) qu'avant.", deltas:{force:5,courage:3}}},
+    {label:"Accepter de l'aide sans honte", success:{text:"Tu apprends à recevoir autant qu'à donner.", deltas:{charme:4}}},
+    {label:"Continuer à travailler malgré tout", success:{text:"Ta détermination impressionne, au prix de ton repos.", deltas:{courage:4,harmonie:-2}}},
+    {label:"En profiter pour ralentir et réfléchir", success:{text:"Cette pause t'apporte une vraie clarté.", deltas:{sagesse:5}}},
+  ]),
+  F('ha5',"Une opportunité professionnelle inattendue","Un poste intéressant se présente à toi.",[
+    {label:"Foncer sans hésiter", chance:55, chanceStat:'chance',
+     success:{text:"Le pari s'avère payant.", deltas:{chance:6,charme:2}},
+     fail:{text:"Le poste ne convient finalement pas.", deltas:{chance:-3,sagesse:1}}},
+    {label:"Peser soigneusement le pour et le contre", success:{text:"Ta réflexion te mène à une décision équilibrée.", deltas:{sagesse:4}}},
+    {label:"Refuser, tu es bien où tu es", success:{text:"Tu choisis la stabilité.", deltas:{harmonie:3}}},
+    {label:"Demander conseil à tes proches", success:{text:"Leur avis éclaire ta décision.", deltas:{charme:3}}},
+  ]),
+  F('ha6',"Une trahison inattendue","Quelqu'un en qui tu avais confiance te déçoit profondément.",[
+    {label:"Confronter directement la personne", chance:50, chanceStat:'courage',
+     success:{text:"La discussion, difficile, permet de tout clarifier.", deltas:{courage:4,sagesse:2}},
+     fail:{text:"La confrontation tourne mal et envenime les choses.", deltas:{harmonie:-3}, reputationDelta:-2}},
+    {label:"Prendre tes distances sans un mot", success:{text:"Tu tournes la page, discrètement.", deltas:{sagesse:3}}},
+    {label:"Pardonner et tourner la page", success:{text:"Tu choisis l'apaisement plutôt que la rancune.", deltas:{harmonie:4}}},
+    {label:"En parler à d'autres proches", success:{text:"Leur soutien t'aide à encaisser le coup.", deltas:{charme:3}}},
+  ]),
+  F('ha7',"Une proposition d'affaires douteuse","Quelqu'un te propose un accord qui semble trop beau pour être honnête.",[
+    {label:"Accepter malgré tes doutes", chance:40, chanceStat:'chance',
+     success:{text:"Contre toute attente, l'affaire est honnête et lucrative.", deltas:{chance:7}},
+     fail:{text:"C'était bien une arnaque. Une leçon coûteuse.", deltas:{chance:-5,sagesse:2}}},
+    {label:"Refuser catégoriquement", success:{text:"Tu préfères ne pas prendre de risque.", deltas:{sagesse:4}}},
+    {label:"Enquêter discrètement avant de répondre", success:{text:"Ta prudence te révèle la vérité à temps.", deltas:{sagesse:5}}},
+    {label:"En parler à des collègues de confiance", success:{text:"Leur avis éclaire ta décision.", deltas:{charme:3}}},
+  ]),
+  F('ha8',"Un rêve qui te hante","Un rêve étrangement précis revient te visiter plusieurs nuits de suite.",[
+    {label:"Consulter quelqu'un pour en parler", success:{text:"Mettre des mots dessus t'apaise.", deltas:{charme:3,sagesse:2}}},
+    {label:"Le noter en détail dans un carnet", success:{text:"Tu y vois plus clair en l'écrivant.", deltas:{sagesse:4}}},
+    {label:"L'ignorer et continuer ta routine", success:{text:"Il finit par s'estomper avec le temps.", deltas:{chance:2}}},
+    {label:"Y voir un signe et changer quelque chose dans ta vie", success:{text:"Ce petit changement te fait du bien.", deltas:{courage:3,harmonie:2}}},
+  ]),
+  F('ha9',"La perte d'un objet cher","Un objet auquel tu tenais énormément a disparu.",[
+    {label:"Tout retourner pour le retrouver", chance:50, chanceStat:'chance',
+     success:{text:"Tu le retrouves après une recherche acharnée.", deltas:{chance:5}},
+     fail:{text:"Il reste introuvable, une vraie tristesse.", deltas:{harmonie:-3,sagesse:2}}},
+    {label:"Accepter la perte avec philosophie", success:{text:"Ce n'était qu'un objet, après tout.", deltas:{sagesse:5}}},
+    {label:"Demander de l'aide à tes proches pour chercher", success:{text:"Leur soutien te touche sincèrement.", deltas:{charme:3,harmonie:2}}},
+    {label:"En racheter un similaire", success:{text:"Ce n'est pas pareil, mais ça console un peu.", deltas:{chance:2}}},
+  ]),
+  F('ha10',"Un tournoi improvisé sur la base","Les habitants de la base organisent une petite compétition.",[
+    {label:"Participer à fond", chance:50, chanceStat:'force',
+     success:{text:"Tu remportes le tournoi, fier(ère) de toi.", deltas:{force:5}, reputationDelta:4},
+     fail:{text:"Tu perds en finale, un peu frustrant.", deltas:{force:-1,sagesse:1}}},
+    {label:"Participer surtout pour le plaisir", success:{text:"Tu passes un bon moment, peu importe le résultat.", deltas:{charme:3}}},
+    {label:"Organiser l'événement plutôt que d'y participer", success:{text:"Ton sens de l'organisation est salué.", deltas:{sagesse:3}, reputationDelta:2}},
+    {label:"Encourager les autres depuis les gradins", success:{text:"Ta bonne humeur est contagieuse.", deltas:{charme:3}}},
+  ]),
+  F('ha11',"Une tempête de sable approche","Une tempête violente menace de s'abattre sur la base.",[
+    {label:"Organiser la sécurisation des installations", chance:55, chanceStat:'sagesse',
+     success:{text:"Grâce à ton organisation, les dégâts sont minimes.", deltas:{sagesse:6}, reputationDelta:6},
+     fail:{text:"Malgré tes efforts, quelques dégâts sont à déplorer.", deltas:{harmonie:-2,sagesse:2}}},
+    {label:"Te réfugier et attendre que ça passe", success:{text:"La prudence a parfois du bon.", deltas:{sagesse:2}}},
+    {label:"Aider tes voisins à sécuriser leurs biens", success:{text:"Ton entraide est appréciée de tous.", deltas:{charme:4}, reputationDelta:3}},
+    {label:"Filmer l'événement pour les archives", success:{text:"Tes images impressionnantes font le tour de la base.", deltas:{charme:3}}},
+  ]),
+  F('ha12',"Une bête sauvage rôde près de la base","Une créature de Pandora s'aventure dangereusement près des habitations.",[
+    {label:"Aller l'observer de près, en scientifique", chance:40, chanceStat:'sagesse',
+     success:{text:"Tu ramènes des observations précieuses.", deltas:{sagesse:6}, reputationDelta:4},
+     fail:{text:"Elle te charge et tu dois fuir précipitamment.", deltas:{courage:-2}, deathChance:3, deathText:"La créature ne te laisse aucune chance."}},
+    {label:"Alerter la sécurité immédiatement", success:{text:"L'affaire est gérée sans incident.", deltas:{sagesse:3}}},
+    {label:"Rester bien à l'écart, par prudence", success:{text:"Tu préfères ne pas prendre de risque.", deltas:{sagesse:2}}},
+    {label:"Tenter de la faire fuir pacifiquement", chance:45, chanceStat:'courage',
+     success:{text:"Elle repart sans incident, impressionnée par ton calme.", deltas:{courage:4,harmonie:2}},
+     fail:{text:"Elle ne bouge pas, et tu dois reculer prudemment.", deltas:{courage:-1}}},
+  ]),
+  F('ha13',"Une opportunité de mentorat","On te propose de former les nouvelles recrues arrivées de la Terre.",[
+    {label:"Accepter avec enthousiasme", success:{text:"Tu prends un vrai plaisir à transmettre.", deltas:{sagesse:5,charme:2}, reputationDelta:3}},
+    {label:"Décliner, tu préfères te concentrer sur toi", success:{text:"Tu gardes ton énergie pour tes propres projets.", deltas:{sagesse:2}}},
+    {label:"Accepter à temps partiel seulement", success:{text:"Un bon équilibre entre transmission et vie personnelle.", deltas:{sagesse:3,harmonie:2}}},
+    {label:"Proposer une méthode de formation différente", success:{text:"Ton originalité est remarquée par la hiérarchie.", deltas:{charme:4}, reputationDelta:2}},
+  ]),
+  F('ha14',"La visite d'un inspecteur RDA","Un audit inattendu de la Compagnie s'annonce.",[
+    {label:"Tout préparer méticuleusement", success:{text:"L'inspection se passe sans accroc.", deltas:{sagesse:4}, reputationDelta:3}},
+    {label:"Rester détendu(e), tu n'as rien à cacher", success:{text:"Ton calme naturel rassure tout le monde.", deltas:{charme:3}}},
+    {label:"Profiter de l'occasion pour signaler un problème", chance:45, chanceStat:'courage',
+     success:{text:"Ton signalement mène à une vraie amélioration.", deltas:{courage:4}, reputationDelta:6},
+     fail:{text:"Ça ne passe pas bien du tout auprès de la hiérarchie.", reputationDelta:-6}},
+    {label:"Te faire discret(ète) pendant l'inspection", success:{text:"Tu évites soigneusement les projecteurs.", deltas:{chance:2}}},
+  ]),
+  F('ha15',"Un jeune te demande d'être son mentor","Une jeune recrue admire ton parcours et cherche tes conseils.",[
+    {label:"Accepter de le/la guider", success:{text:"Une belle relation de confiance se construit.", deltas:{sagesse:4,charme:2}}, reputationDelta:2},
+    {label:"Lui donner un conseil, sans plus t'engager", success:{text:"Un échange bref, mais utile pour lui/elle.", deltas:{sagesse:2}}},
+    {label:"Le/la rediriger vers quelqu'un de plus qualifié", success:{text:"Tu estimes que ce n'est pas ton rôle.", deltas:{chance:2}}},
+    {label:"Lui raconter honnêtement tes propres échecs", success:{text:"Ta sincérité le/la touche profondément.", deltas:{charme:4}}},
+  ]),
+  F('ha16',"Une période particulièrement productive","Tout semble te réussir professionnellement en ce moment.",[
+    {label:"Capitaliser à fond sur cette dynamique", chance:55, chanceStat:'chance',
+     success:{text:"Tu enchaînes les réussites, porté(e) par l'élan.", deltas:{chance:6}, reputationDelta:4},
+     fail:{text:"Tu t'épuises un peu à vouloir trop en faire.", deltas:{harmonie:-2}}},
+    {label:"Savourer ce moment sans t'épuiser", success:{text:"Tu profites intelligemment de cette période.", deltas:{harmonie:3,sagesse:2}}},
+    {label:"En faire profiter ton équipe", success:{text:"Ton succès rejaillit sur tout le monde.", deltas:{charme:4}, reputationDelta:3}},
+    {label:"Rester humble malgré tout", success:{text:"Ton attitude est appréciée de tous.", deltas:{sagesse:3}}},
+  ]),
+  F('ha17',"Le doute sur ta propre voie","Tu te demandes soudain si tu as fait les bons choix jusqu'ici.",[
+    {label:"En parler ouvertement avec un proche", success:{text:"Cette conversation t'apaise sincèrement.", deltas:{charme:3,sagesse:2}}},
+    {label:"Prendre du recul en solitaire", success:{text:"Le calme t'aide à y voir plus clair.", deltas:{harmonie:4}}},
+    {label:"Te lancer dans un nouveau défi pour te prouver quelque chose", chance:50, chanceStat:'courage',
+     success:{text:"Ce nouveau défi relevé te redonne confiance.", deltas:{courage:5}},
+     fail:{text:"L'échec renforce un peu plus ton doute.", deltas:{courage:-2,sagesse:2}}},
+    {label:"Accepter simplement ce doute, sans chercher à le résoudre", success:{text:"Tu fais la paix avec l'incertitude.", deltas:{sagesse:4}}},
+  ]),
+  F('ha18',"Une rumeur circule sur toi","Des bruits de couloir déforment quelque chose que tu as fait.",[
+    {label:"Rétablir la vérité publiquement", chance:50, chanceStat:'charme',
+     success:{text:"Ta mise au point calme les esprits.", deltas:{charme:4}, reputationDelta:4},
+     fail:{text:"Ça ne fait qu'attiser un peu plus la rumeur.", reputationDelta:-3}},
+    {label:"Laisser la rumeur s'éteindre d'elle-même", success:{text:"Le temps finit par tout apaiser.", deltas:{sagesse:3}}},
+    {label:"En parler directement à la source", success:{text:"Une discussion franche règle le problème.", deltas:{courage:3,sagesse:2}}},
+    {label:"En rire ouvertement", success:{text:"Ton détachement désamorce la situation.", deltas:{charme:3}}},
+  ]),
+];
+const HUMAN_ANCIEN = [
+  F('hc1',"Le bilan d'une vie","L'heure des réflexions arrive naturellement.",[
+    {label:"Te réjouir de ce que tu as accompli", success:{text:"La fierté l'emporte sur le doute.", deltas:{charme:4}, reputationDelta:3}},
+    {label:"Regretter certains choix", success:{text:"Tu en tires malgré tout une forme de sagesse.", deltas:{sagesse:5}}},
+    {label:"Te tourner vers l'avenir de tes proches", success:{text:"Leur avenir compte plus que ton passé.", deltas:{harmonie:4}}},
+    {label:"Faire la paix avec ton parcours, sans détour", success:{text:"Tu avances, apaisé(e).", deltas:{chance:3}}},
+  ]),
+  F('hc2',"Transmettre son histoire","Il est temps de penser à ce que tu laisseras.",[
+    {label:"Écrire tes mémoires en détail", success:{text:"Ton histoire survivra à travers ces pages.", deltas:{sagesse:6}, reputationDelta:5}},
+    {label:"Raconter oralement à qui veut entendre", success:{text:"Tes récits deviennent une tradition familiale.", deltas:{charme:5}}},
+    {label:"Garder tes souvenirs pour toi", success:{text:"Tu chéris ton passé en silence.", deltas:{sagesse:3}}},
+    {label:"Les confier à un seul proche de confiance", success:{text:"Un lien précieux et intime se scelle.", deltas:{harmonie:4}}},
+  ]),
+  F('hc3',"Le corps se fait plus lent","L'âge commence à peser sur tes gestes.",[
+    {label:"Continuer comme si de rien n'était", success:{text:"Ta détermination force le respect.", deltas:{courage:3}}},
+    {label:"Accepter de l'aide des plus jeunes", success:{text:"Tu apprends à accepter la transmission inverse.", deltas:{sagesse:4}}},
+    {label:"Te consacrer à des activités plus calmes", success:{text:"Tu trouves un nouveau rythme, plus paisible.", deltas:{harmonie:3}}},
+    {label:"En rire avec tes proches", success:{text:"L'humour adoucit le poids des ans.", deltas:{charme:3}}},
+  ]),
+  F('hc4',"Un différend familial","Deux de tes proches se disputent, et te demandent d'arbitrer.",[
+    {label:"Trancher fermement en ton âme et conscience", success:{text:"Ta décision, bien que dure, apaise la situation.", deltas:{sagesse:5}, reputationDelta:3}},
+    {label:"Écouter longuement chaque partie", success:{text:"Ta patience désamorce peu à peu le conflit.", deltas:{charme:4}}},
+    {label:"Refuser de choisir un camp", success:{text:"Tu préfères ne pas t'en mêler.", deltas:{chance:2}}},
+    {label:"Proposer un compromis équitable", success:{text:"Les deux parties repartent satisfaites.", deltas:{sagesse:4,charme:2}}},
+  ]),
+  F('hc5',"Une invitation surprenante","On te propose de revenir donner une conférence sur ton expérience.",[
+    {label:"Accepter et partager sans filtre", success:{text:"Ton témoignage marque profondément l'auditoire.", deltas:{charme:5}, reputationDelta:4}},
+    {label:"Accepter, mais en restant mesuré(e)", success:{text:"Un discours sobre, mais apprécié.", deltas:{sagesse:3}}},
+    {label:"Décliner poliment", success:{text:"Tu préfères la discrétion à cette étape de ta vie.", deltas:{sagesse:2}}},
+    {label:"Proposer d'écrire un texte plutôt que de parler", success:{text:"Tes mots touchent autant que ta voix l'aurait fait.", deltas:{sagesse:4}}},
+  ]),
+  F('hc6',"Un vieux compagnon te rend visite","Une personne de ton passé, que tu n'avais pas vue depuis longtemps, réapparaît.",[
+    {label:"L'accueillir à bras ouverts", success:{text:"Les retrouvailles sont chaleureuses et sincères.", deltas:{charme:4,harmonie:2}}},
+    {label:"Rester prudent(e), le temps a changé les choses", success:{text:"Vous vous retrouvez, mais avec une certaine distance.", deltas:{sagesse:3}}},
+    {label:"Évoquer longuement le passé ensemble", success:{text:"Un moment nostalgique et précieux.", deltas:{sagesse:3,charme:2}}},
+    {label:"Profiter de l'occasion pour tourner définitivement la page", success:{text:"Une conversation qui clôt un chapitre entier.", deltas:{sagesse:4}}},
+  ]),
+  F('hc7',"Un projet à finir ou à laisser","Un projet personnel inachevé te trotte encore dans la tête.",[
+    {label:"Te lancer pour enfin le terminer", chance:55, chanceStat:'sagesse',
+     success:{text:"Tu achèves enfin ce projet qui te tenait à cœur.", deltas:{sagesse:5}, reputationDelta:3},
+     fail:{text:"Tu n'arrives pas à le mener à bien, malgré tes efforts.", deltas:{sagesse:2,harmonie:-1}}},
+    {label:"Le confier à quelqu'un de plus jeune", success:{text:"Ton idée continuera à vivre autrement.", deltas:{charme:3}}},
+    {label:"L'abandonner en paix", success:{text:"Tu fais le deuil de ce projet, sereinement.", deltas:{sagesse:3}}},
+    {label:"Le transformer en quelque chose de plus modeste", success:{text:"Une version plus simple, mais tout aussi satisfaisante.", deltas:{sagesse:3,chance:1}}},
+  ]),
+  F('hc8',"Une nuit sans sommeil","Le sommeil te fuit, et les pensées affluent.",[
+    {label:"Sortir prendre l'air", success:{text:"L'air frais t'apaise l'esprit.", deltas:{harmonie:4}}},
+    {label:"Relire de vieilles lettres ou photos", success:{text:"Un doux moment de nostalgie.", deltas:{sagesse:3,charme:2}}},
+    {label:"Écrire ce qui te passe par la tête", success:{text:"Coucher tes pensées sur le papier t'apaise.", deltas:{sagesse:4}}},
+    {label:"Te forcer à te rendormir", success:{text:"Le sommeil finit par revenir, tant bien que mal.", deltas:{sagesse:2}}},
+  ]),
+  F('hc9',"Le regard des plus jeunes","Tu remarques la façon dont les jeunes générations te perçoivent désormais.",[
+    {label:"T'en amuser avec bienveillance", success:{text:"Tu prends ça avec humour et légèreté.", deltas:{charme:4}}},
+    {label:"T'en servir pour mieux les comprendre", success:{text:"Tu apprends beaucoup de leur perspective.", deltas:{sagesse:4}}},
+    {label:"Leur montrer que tu as encore beaucoup à offrir", success:{text:"Tu surprends tout le monde par ta vitalité.", deltas:{courage:3}, reputationDelta:2}},
+    {label:"Ne pas t'en préoccuper outre mesure", success:{text:"Leur regard n'a plus vraiment d'importance pour toi.", deltas:{sagesse:3}}},
+  ]),
+  F('hc10',"Une invitation à ralentir","Un médecin ou un proche te suggère fermement de lever le pied.",[
+    {label:"Suivre le conseil à la lettre", success:{text:"Tu te sens mieux en respectant ce rythme.", deltas:{harmonie:4}}},
+    {label:"L'ignorer et continuer comme avant", success:{text:"Ta détermination impressionne, mais inquiète un peu.", deltas:{courage:3,harmonie:-2}}},
+    {label:"Trouver un compromis raisonnable", success:{text:"Un équilibre qui te convient parfaitement.", deltas:{sagesse:4}}},
+    {label:"En discuter longuement avant de décider", success:{text:"Cette réflexion t'aide à faire le bon choix.", deltas:{sagesse:3}}},
+  ]),
+  F('hc11',"Une réunion d'anciens collègues","D'anciens compagnons de route organisent des retrouvailles.",[
+    {label:"Y participer avec enthousiasme", success:{text:"Une soirée pleine de rires et de souvenirs.", deltas:{charme:4,harmonie:2}}},
+    {label:"Décliner, tu préfères regarder vers l'avant", success:{text:"Tu assumes ce choix sans regret.", deltas:{sagesse:2}}},
+    {label:"Y aller brièvement, par politesse", success:{text:"Un passage agréable, sans plus.", deltas:{charme:2}}},
+    {label:"Organiser toi-même l'événement", success:{text:"Ton initiative est chaleureusement saluée.", deltas:{charme:3}, reputationDelta:3}},
+  ]),
+  F('hc12',"Un appareil qui te dépasse","La nouvelle technologie arrivée sur Pandora te semble déroutante.",[
+    {label:"Prendre le temps de bien l'apprendre", success:{text:"Tu maîtrises finalement l'outil, non sans effort.", deltas:{sagesse:4}}},
+    {label:"Demander à un plus jeune de t'aider", success:{text:"Ce moment de partage vous rapproche.", deltas:{charme:3,harmonie:1}}},
+    {label:"T'en passer complètement", success:{text:"Tu n'en as pas vraiment besoin, après tout.", deltas:{sagesse:2}}},
+    {label:"En rire de bon cœur", success:{text:"Ton autodérision détend l'atmosphère.", deltas:{charme:3}}},
+  ]),
+  F('hc13',"Le mal du pays","La Terre te manque, d'une façon inattendue, après toutes ces années.",[
+    {label:"Regarder de vieilles images de la Terre", success:{text:"Un doux moment de nostalgie, sans tristesse excessive.", deltas:{harmonie:3}}},
+    {label:"En parler avec d'autres qui ressentent la même chose", success:{text:"Tu n'es pas seul(e) dans ce sentiment.", deltas:{charme:3,harmonie:1}}},
+    {label:"Te rappeler pourquoi tu es resté(e) ici", success:{text:"Cette réflexion ravive ton attachement à Pandora.", deltas:{sagesse:3}}},
+    {label:"Écrire une longue lettre, même sans destinataire", success:{text:"L'écriture t'aide à mettre de l'ordre dans tes pensées.", deltas:{sagesse:2,charme:1}}},
+  ]),
+  F('hc14',"Une question difficile d'un enfant","Un enfant de ton entourage te pose une question existentielle, sans détour.",[
+    {label:"Répondre honnêtement, sans filtre", success:{text:"Ta sincérité le/la marque profondément.", deltas:{sagesse:3,charme:2}}},
+    {label:"Répondre avec une métaphore douce", success:{text:"Ta réponse imagée fait mouche.", deltas:{charme:4}}},
+    {label:"Botter en touche gentiment", success:{text:"Tu élude, pour cette fois.", deltas:{chance:2}}},
+    {label:"Retourner la question et l'écouter d'abord", success:{text:"Sa propre réponse te surprend agréablement.", deltas:{sagesse:3}}},
+  ]),
+  F('hc15',"Un vieux différend professionnel","Une vieille rivalité de carrière refait surface, des années après.",[
+    {label:"Tendre la main pour l'apaiser", success:{text:"La réconciliation soulage un vieux poids.", deltas:{harmonie:4,charme:2}}},
+    {label:"Laisser les choses telles qu'elles sont", success:{text:"Certaines pages restent fermées, et c'est très bien ainsi.", deltas:{sagesse:2}}},
+    {label:"En rire, avec le recul des années", success:{text:"Ce vieux conflit paraît bien dérisoire, aujourd'hui.", deltas:{charme:3}}},
+    {label:"En reparler franchement, une bonne fois pour toutes", success:{text:"Cette discussion clôt enfin le sujet.", deltas:{courage:3,sagesse:2}}},
+  ]),
+  F('hc16',"Une envie de voyager encore","Malgré ton âge, l'envie de découvrir un coin inconnu de Pandora te reprend.",[
+    {label:"Organiser l'expédition sans attendre", chance:50, chanceStat:'chance',
+     success:{text:"Ce voyage tardif reste un souvenir inoubliable.", deltas:{chance:5,harmonie:3}},
+     fail:{text:"Le voyage est plus fatigant que prévu, mais tu ne regrettes rien.", deltas:{harmonie:-1,sagesse:2}}},
+    {label:"Te contenter de rêver, sans partir vraiment", success:{text:"L'imagination a parfois autant de valeur que le voyage.", deltas:{sagesse:2}}},
+    {label:"Convaincre quelqu'un de t'accompagner", success:{text:"Ce voyage à deux rend l'aventure plus belle encore.", deltas:{charme:4}}},
+    {label:"Préparer le voyage pour quelqu'un d'autre à ta place", success:{text:"Voir un proche vivre cette aventure te comble aussi.", deltas:{charme:3}}},
+  ]),
+  F('hc17',"Un silence à combler","Une conversation difficile avec un proche n'a jamais vraiment eu lieu.",[
+    {label:"Provoquer enfin cette conversation", chance:50, chanceStat:'courage',
+     success:{text:"Ce dialogue, longtemps repoussé, apaise énormément.", deltas:{courage:4,harmonie:3}},
+     fail:{text:"La conversation reste difficile et incomplète.", deltas:{harmonie:-2,sagesse:2}}},
+    {label:"L'écrire dans une lettre plutôt que de le dire", success:{text:"Les mots écrits trouvent leur chemin.", deltas:{sagesse:3,charme:1}}},
+    {label:"Laisser ce silence perdurer", success:{text:"Certaines choses restent non-dites, et c'est un choix aussi.", deltas:{sagesse:2}}},
+    {label:"Demander à un tiers de faciliter l'échange", success:{text:"Cette médiation aide beaucoup.", deltas:{charme:2,sagesse:2}}},
+  ]),
+  F('hc18',"Un dernier grand projet","L'envie de te lancer dans un ultime grand projet personnel te saisit.",[
+    {label:"Te lancer à fond dedans", chance:50, chanceStat:'courage',
+     success:{text:"Ce projet devient l'un des accomplissements dont tu es le/la plus fier(ère).", deltas:{courage:4}, reputationDelta:4},
+     fail:{text:"Le projet reste inachevé, mais l'élan valait la peine.", deltas:{sagesse:2}}},
+    {label:"Le mener à un rythme tranquille", success:{text:"Tu avances sans te presser, et ça suffit amplement.", deltas:{sagesse:3}}},
+    {label:"L'entreprendre avec d'autres plutôt que seul(e)", success:{text:"Ce projet collectif crée de beaux liens.", deltas:{charme:3,harmonie:2}}},
+    {label:"Y renoncer, finalement", success:{text:"Tu te recentres sur d'autres priorités.", deltas:{sagesse:2}}},
+  ]),
+];
+
+/* ============================= CONSTRUCTION DU SCRIPT ANNÉE PAR ANNÉE ============================= */
+
+/* Cycler qui NE reboucle JAMAIS : une fois le contenu épuisé, il renvoie null
+   (le script bascule alors sur le générateur générique, toujours varié). */
+function makeCycler(pool){
+  const queue = shuffle(pool); let idx = 0;
+  return function next(){ return idx < queue.length ? queue[idx++] : null; };
+}
+function poolFor(species, bracket){
+  if(species==='navi'){
+    if(bracket==='jeunesse') return NAVI_JEUNESSE;
+    if(bracket==='adulte') return NAVI_ADULTE;
+    return NAVI_ANCIEN;
+  }
+  if(bracket==='jeunesse') return HUMAN_JEUNESSE;
+  if(bracket==='adulte') return HUMAN_ADULTE;
+  return HUMAN_ANCIEN;
+}
+function yearMode(tier){
+  if(tier==='moyen') return 'auto';
+  if(tier==='normal') return Math.random()<0.5 ? 'full' : 'auto';
+  if(tier==='long') return Math.random()<0.8 ? 'full' : 'auto';
+  if(tier==='immersif') return 'full';
+  return 'auto';
+}
+
+function buildLifeScript(trunkStages, species, tier, startAge, endAge){
+  if(startAge > endAge) return [];
+  if(tier==='court'){
+    return trunkStages.filter(s=> s.milestone && s.age>=startAge && s.age<=endAge);
+  }
+  const milestones = {};
+  trunkStages.forEach(s=>{ if(s.age>=startAge && s.age<=endAge) milestones[s.age]=s; });
+  const cyclers = { jeunesse: makeCycler(poolFor(species,'jeunesse')), adulte: makeCycler(poolFor(species,'adulte')), ancien: makeCycler(poolFor(species,'ancien')) };
+  const babies = makeCycler(babyPool(species));
+  const toddlers = makeCycler(toddlerPool(species));
+  let result = [];
+  for(let age=startAge; age<=endAge; age++){
+    if(milestones[age]){ result.push(milestones[age]); continue; }
+    if(age<=2){
+      const b = babies();
+      if(b) result.push(Object.assign({}, b, {id:'baby_'+species+'_'+age, age}));
+      continue;
+    }
+    if(age<=5){
+      const t = toddlers();
+      if(t) result.push(Object.assign({}, t, {id:'tod_'+species+'_'+age, age}));
+      continue;
+    }
+    const bracket = age<18 ? 'jeunesse' : age<=55 ? 'adulte' : 'ancien';
+    const mode = yearMode(tier);
+    if(mode==='auto'){
+      result.push({id:'auto_'+age, age, auto:true, tier:'filler'});
+    } else {
+      const f = cyclers[bracket]();
+      result.push(f ? Object.assign({}, f, {id:f.id+'_'+age, age}) : {id:'genericplaceholder_'+age, age, generic:true, bracket, tier:'filler'});
+    }
+  }
+  return result;
+}
+
+/* ============================= FIN DE VIE ============================= */
+
+function autoChildren(state, count){
+  const pool = state.species==='navi' ? CHILD_NAMES_NAVI : CHILD_NAMES_HUMAN;
+  for(let i=0;i<count;i++){ state.family.children.push(pick(pool)); }
+}
+function finalizeFamily(state){
+  const kids = state.family.children.filter(c=>typeof c==='string' && c.startsWith('@AUTO'));
+  if(kids.length){
+    state.family.children = state.family.children.filter(c=>!(typeof c==='string'&&c.startsWith('@AUTO')));
+    kids.forEach(k=>{ const n=parseInt(k.replace('@AUTO','')); autoChildren(state,n); });
+  }
+}
+function dominantStat(state){
+  let best='force', bv=-1;
+  STAT_KEYS.forEach(k=>{ if(state.stats[k]>bv){bv=state.stats[k]; best=k;} });
+  return best;
+}
+const EPITHETS = {
+  force:"sa force", courage:"son courage", sagesse:"sa lucidité",
+  harmonie:"son calme", charme:"son charme", chance:"sa chance"
+};
+
+/* ============================= TITRES & SUCCÈS ============================= */
+const ALL_TITLES = [
+  "Parti(e) trop tôt","Chef de Clan","Voix d'Eywa","Devenu(e) Na'vi",
+  "Cavalier(ère) de Légende","Déserteur de la RDA","Officier de la RDA","Négociateur(trice) de Paix",
+  "Arrivé(e) sur le Tard","Ermite","Retourné(e) sur Terre","Allié(e) Discret(ète)",
+  "Chef de Famille Nombreuse","Personne Respectée","Personne Mal Vue","Force de la Nature",
+  "Sage Reconnu(e)","Chanceux(se)","Une Légende de Pandora","Une Vie Tranquille"
+];
+
+const TITLE_HINTS = {
+  "Parti(e) trop tôt": "Meurs avant la fin naturelle de ta vie, en prenant un risque qui tourne mal.",
+  "Chef de Clan": "En tant que Na'vi, deviens Olo'eyktan à l'âge de la sagesse.",
+  "Voix d'Eywa": "En tant que Na'vi, deviens Tsahìk à l'âge de la sagesse.",
+  "Devenu(e) Na'vi": "En tant qu'humain lié au Programme Avatar, transforme-toi en Na'vi pour de bon.",
+  "Cavalier(ère) de Légende": "Réussis le dressage risqué de ton Ikran, celui qui a le moins de chances de marcher.",
+  "Déserteur de la RDA": "En tant que militaire, fais défection pour rejoindre la résistance na'vi.",
+  "Officier de la RDA": "En tant que militaire, reste fidèle à la RDA jusqu'au bout.",
+  "Négociateur(trice) de Paix": "Négocie secrètement la paix pendant le conflit entre humains et Na'vis.",
+  "Arrivé(e) sur le Tard": "En tant que civil, obtiens un lien avatar tardif à 40 ans.",
+  "Ermite": "En tant qu'ancien Na'vi, choisis de te retirer seul(e) plutôt que de prendre des responsabilités.",
+  "Retourné(e) sur Terre": "Après avoir eu un lien avatar, choisis de quitter Pandora pour de bon.",
+  "Allié(e) Discret(ète)": "Aide secrètement l'autre camp pendant le conflit.",
+  "Chef de Famille Nombreuse": "Aie au moins trois enfants au cours de ta vie.",
+  "Personne Respectée": "Termine ta vie avec une réputation d'au moins +40.",
+  "Personne Mal Vue": "Termine ta vie avec une réputation d'au plus -20.",
+  "Force de la Nature": "Atteins 75 de Force.",
+  "Sage Reconnu(e)": "Atteins 75 de Sagesse.",
+  "Chanceux(se)": "Atteins 75 de Chance.",
+  "Une Légende de Pandora": "Termine une vie avec au moins 350 points au score final.",
+  "Une Vie Tranquille": "Termine une vie sans grand éclat particulier — c'est le résultat par défaut.",
+};
+
+function buildTitleAndEpilogue(state){
+  let title, epilogue;
+  const dom = dominantStat(state);
+  if(!state.alive){
+    title = "Parti(e) trop tôt";
+    epilogue = `${state.name} est mort(e) à ${state.age} ans. ${state.deathText||''}`;
+  } else if(state.flags.chef){
+    title = "Chef de Clan";
+    epilogue = `${state.name} a fini par diriger le clan tout entier, porté(e) par ${EPITHETS[dom]} jusqu'au bout.`;
+  } else if(state.flags.tsahik){
+    title = "Voix d'Eywa";
+    epilogue = `${state.name} est devenu(e) Tsahìk, la voix spirituelle du clan, avec ${EPITHETS[dom]} en plus.`;
+  } else if(state.flags.devenuNavi){
+    title = "Devenu(e) Na'vi";
+    epilogue = `Né(e) humain(e), ${state.name} a fini par devenir pleinement Na'vi. Une vie peu ordinaire, portée par ${EPITHETS[dom]}.`;
+  } else if(state.flags.ikranEpique){
+    title = "Cavalier(ère) de Légende";
+    epilogue = `On se souviendra longtemps du jour où ${state.name} a dompté son Ikran de cette façon. ${EPITHETS[dom]} y est pour beaucoup.`;
+  } else if(state.flags.deserteur){
+    title = "Déserteur de la RDA";
+    epilogue = `${state.name} a tout risqué pour rejoindre le Peuple. Un choix tenu grâce à ${EPITHETS[dom]}.`;
+  } else if(state.flags.loyalRDA){
+    title = "Officier de la RDA";
+    epilogue = `${state.name} est resté(e) fidèle à la Compagnie jusqu'au bout, porté(e) surtout par ${EPITHETS[dom]}.`;
+  } else if(state.flags.paixLocale){
+    title = "Négociateur(trice) de Paix";
+    epilogue = `${state.name} a pris des risques pour éviter le pire, des deux côtés du conflit. ${EPITHETS[dom]} y a beaucoup contribué.`;
+  } else if(state.flags.avatarTardif){
+    title = "Arrivé(e) sur le Tard";
+    epilogue = `${state.name} a découvert Pandora tardivement, mais pleinement. Comme quoi il n'est jamais trop tard, avec ${EPITHETS[dom]}.`;
+  } else if(state.flags.ermite){
+    title = "Ermite";
+    epilogue = `${state.name} a préféré la tranquillité de la forêt aux responsabilités du clan, avec ${EPITHETS[dom]} pour seule compagnie.`;
+  } else if(state.flags.quitPandora){
+    title = "Retourné(e) sur Terre";
+    epilogue = `${state.name} a fini par tourner le dos à Pandora, en emportant ${EPITHETS[dom]} avec lui/elle.`;
+  } else if(state.flags.secretAlly || state.flags.secretLove){
+    title = "Allié(e) Discret(ète)";
+    epilogue = `${state.name} a agi dans l'ombre toute sa vie, plus fidèle à ses convictions qu'à un camp. ${EPITHETS[dom]} lui a permis de tenir.`;
+  } else if(state.family.children.length>=3){
+    title = "Chef de Famille Nombreuse";
+    epilogue = `${state.name} laisse derrière lui/elle une grande famille, et ${EPITHETS[dom]} comme héritage.`;
+  } else if(state.score>=350){
+    title = "Une Légende de Pandora";
+    epilogue = `${state.name} a tant vécu que son nom dépasse déjà celui de son propre clan, grâce à ${EPITHETS[dom]}.`;
+  } else if(state.reputation>=40){
+    title = "Personne Respectée";
+    epilogue = `${state.name} laisse derrière lui/elle une réputation solide, construite grâce à ${EPITHETS[dom]}.`;
+  } else if(state.reputation<=-20){
+    title = "Personne Mal Vue";
+    epilogue = `${state.name} n'a jamais brillé aux yeux des autres, mais est resté(e) fidèle à ${EPITHETS[dom]}.`;
+  } else if(state.stats.force>=75){
+    title = "Force de la Nature";
+    epilogue = `${state.name} restera dans les mémoires pour sa force peu commune. ${EPITHETS[dom]}, tout simplement.`;
+  } else if(state.stats.sagesse>=75){
+    title = "Sage Reconnu(e)";
+    epilogue = `${state.name} a marqué les esprits par ${EPITHETS[dom]}, jusqu'à la fin.`;
+  } else if(state.stats.chance>=75){
+    title = "Chanceux(se)";
+    epilogue = `${state.name} semble avoir traversé la vie porté(e) par ${EPITHETS[dom]}, plus que la moyenne.`;
+  } else {
+    title = "Une Vie Tranquille";
+    epilogue = `${state.name} a mené une vie simple et sincère sur Pandora, avec ${EPITHETS[dom]} comme fil conducteur.`;
+  }
+  const famTxt = state.family.married
+    ? ` Marié(e) à ${state.family.spouseName}${state.family.children.length? ', '+ (state.family.children.length>1?"parent de "+state.family.children.length+" enfants ("+state.family.children.join(', ')+")":"parent d'un enfant ("+state.family.children[0]+")") : ", sans enfant"}.`
+    : (state.family.children.length ? ` Parent solo de ${state.family.children.join(', ')}.` : " Cette vie n'aura pas connu de conjoint ou conjointe.");
+  epilogue += famTxt;
+  epilogue += ` Score final : ${state.score} points.`;
+  if(state.tier==='immersif' || state.tier==='long'){
+    epilogue += ` Au total, ${state.history.length} moments auront marqué cette vie, un par un.`;
+  }
+  return {title, epilogue};
+}
+
+function unlockTitle(title){
+  const titles = JSON.parse(localStorage.getItem('eywa_titles')||'{}');
+  if(!titles[title]) titles[title] = {count:0, first:Date.now()};
+  titles[title].count++;
+  titles[title].last = Date.now();
+  localStorage.setItem('eywa_titles', JSON.stringify(titles));
+}
+function getUnlockedTitles(){ return JSON.parse(localStorage.getItem('eywa_titles')||'{}'); }
+
+/* ============================= APP / UI ============================= */
+
+let STATE = null;
+let creation = {};
+let _dynCache = {pos:-1, stage:null};
+const appEl = document.getElementById('app');
+
+function setSpeciesTheme(sp){ document.getElementById('phone').className = sp==='navi' ? 'species-navi' : 'species-humain'; }
+function render(html){ appEl.innerHTML = html; appEl.scrollTop=0; }
+
+function saveCurrent(){ if(STATE) localStorage.setItem('eywa_current', JSON.stringify(STATE)); }
+function clearCurrent(){ localStorage.removeItem('eywa_current'); }
+function loadCurrent(){ const r=localStorage.getItem('eywa_current'); return r?JSON.parse(r):null; }
+function getMemoires(){ return JSON.parse(localStorage.getItem('eywa_memoires')||'[]'); }
+function saveMemoire(entry){ const m=getMemoires(); m.unshift(entry); localStorage.setItem('eywa_memoires', JSON.stringify(m)); }
+function deleteMemoire(id){ const m=getMemoires().filter(x=>x.id!==id); localStorage.setItem('eywa_memoires', JSON.stringify(m)); renderMemoires(); }
+
+/* ---- Sauvegarde .json (export / import) ---- */
+function exportSave(){
+  const data = {
+    app: 'avatar-life-of-pandora',
+    version: 1,
+    exportedAt: Date.now(),
+    current: JSON.parse(localStorage.getItem('eywa_current')||'null'),
+    memoires: JSON.parse(localStorage.getItem('eywa_memoires')||'[]'),
+    titles: JSON.parse(localStorage.getItem('eywa_titles')||'{}'),
+  };
+  try{
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const stamp = new Date().toISOString().slice(0,10);
+    a.download = `avatar-life-of-pandora-sauvegarde-${stamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 2000);
+  } catch(e){
+    alert("Le fichier n'a pas pu être généré sur cet appareil.");
+  }
+}
+function triggerImport(){
+  const input = document.getElementById('importFileInput');
+  if(input) input.click();
+}
+function handleImportFile(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    let data;
+    try{ data = JSON.parse(e.target.result); }
+    catch(err){ alert("Ce fichier n'est pas une sauvegarde valide."); input.value=''; return; }
+    if(!data || (data.memoires===undefined && data.titles===undefined && data.current===undefined)){
+      alert("Ce fichier ne correspond pas à une sauvegarde reconnue.");
+      input.value=''; return;
+    }
+    const ok = confirm("Importer cette sauvegarde va remplacer tes vies enregistrées, tes titres et ta partie en cours sur cet appareil. Continuer ?");
+    if(!ok){ input.value=''; return; }
+    if(data.current) localStorage.setItem('eywa_current', JSON.stringify(data.current)); else localStorage.removeItem('eywa_current');
+    localStorage.setItem('eywa_memoires', JSON.stringify(data.memoires||[]));
+    localStorage.setItem('eywa_titles', JSON.stringify(data.titles||{}));
+    input.value='';
+    STATE = null;
+    renderTitle();
+  };
+  reader.onerror = function(){ alert("Impossible de lire ce fichier."); input.value=''; };
+  reader.readAsText(file);
+}
+
+/* ---- Écran Titre ---- */
+function renderTitle(){
+  setSpeciesTheme('navi');
+  const current = loadCurrent();
+  const unlocked = Object.keys(getUnlockedTitles()).length;
+  render(`
+    <div style="padding-top:30px;">
+      <div class="eyebrow">Pandora</div>
+      <h1 class="title display">Avatar<br>Life of Pandora</h1>
+      <div class="tagline">Tu choisis ton espèce, puis tu vis une vie entière, de la naissance jusqu'à la fin. Il existe des milliers de façons dont cela peut tourner. Chaque choix a un effet, et rien ne se répète jamais.</div>
+      ${current ? `<button class="btn primary" onclick="resumeCurrent()">▶ Reprendre — ${current.name}, ${current.age} ans<span class="sub">${current.species==='navi'?"Na'vi":"Humain"} · Partie en cours · ${current.score||0} points</span></button>` : ''}
+      <button class="btn primary" onclick="startLengthSelect()">✦ Nouvelle vie<span class="sub">Choisis la durée, l'espèce, le sexe, et commence</span></button>
+      <button class="btn ghost" onclick="renderMemoires()">📖 Vies passées<span class="sub">${getMemoires().length} vie(s) enregistrée(s)</span></button>
+      <button class="btn ghost" onclick="renderAchievements()">🏆 Titres<span class="sub">${unlocked} / ${ALL_TITLES.length} débloqué(s)</span></button>
+      <button class="btn ghost" onclick="exportSave()">💾 Exporter la sauvegarde<span class="sub">Télécharge un fichier .json pour ne rien perdre</span></button>
+      <button class="btn ghost" onclick="triggerImport()">📂 Importer une sauvegarde<span class="sub">Restaure un fichier .json déjà téléchargé</span></button>
+    </div>
+  `);
+}
+function resumeCurrent(){ STATE = loadCurrent(); _dynCache = {pos:-1, stage:null}; setSpeciesTheme(STATE.species); renderStage(); }
+
+/* ---- Sélection de durée ---- */
+function startLengthSelect(){
+  creation = {};
+  setSpeciesTheme('navi');
+  render(`
+    <div class="eyebrow">Étape 1 / 5</div>
+    <h1 class="title display" style="font-size:26px;">Combien de temps as-tu ?</h1>
+    <div class="tagline">Plus la durée est longue, plus il y aura d'événements à vivre.</div>
+    ${LENGTHS.map(l=>`
+      <button class="btn primary" onclick="chooseLength('${l.id}')">${l.label} <span class="pct">${l.time}</span><span class="sub">${l.desc}</span></button>
+    `).join('')}
+  `);
+}
+function chooseLength(id){ creation.tier = id; startCreation(); }
+
+/* ---- Création de personnage ---- */
+function startCreation(){
+  setSpeciesTheme('navi');
+  render(`
+    <div class="eyebrow">Étape 2 / 5</div>
+    <h1 class="title display" style="font-size:26px;">Humain ou Na'vi ?</h1>
+    <div class="tagline">Par quoi ta vie commence-t-elle ?</div>
+    <button class="btn primary" onclick="chooseSpecies('navi')">🌿 Na'vi<span class="sub">Né(e) dans un clan, sur Pandora.</span></button>
+    <button class="btn primary" onclick="chooseSpecies('humain')">🚀 Humain<span class="sub">Né(e) sur Terre. Tu pourras tout de même devenir Na'vi plus tard, si tu le souhaites.</span></button>
+  `);
+}
+function chooseSpecies(sp){
+  creation.species = sp;
+  setSpeciesTheme(sp);
+  render(`
+    <div class="eyebrow">Étape 3 / 5</div>
+    <h1 class="title display" style="font-size:26px;">Homme ou femme ?</h1>
+    <div class="tagline">Cela influence surtout la partie amoureuse de ta vie.</div>
+    <button class="btn primary" onclick="chooseGender('H')">Homme</button>
+    <button class="btn primary" onclick="chooseGender('F')">Femme</button>
+  `);
+}
+function chooseGender(g){
+  creation.gender = g;
+  if(creation.species==='navi'){
+    render(`
+      <div class="eyebrow">Étape 4 / 5</div>
+      <h1 class="title display" style="font-size:26px;">Ton clan</h1>
+      <button class="btn primary" onclick="chooseOrigin('Omatikaya',{harmonie:6,force:4})">Omatikaya — Peuple de la Forêt<span class="sub">Chasseurs et cavaliers d'Ikran. +Harmonie, +Force</span></button>
+      <button class="btn primary" onclick="chooseOrigin('Tipani',{force:6,courage:4})">Tipani — Peuple des Plaines<span class="sub">Guerriers endurants. +Force, +Courage</span></button>
+      <button class="btn primary" onclick="chooseOrigin('Metkayina',{charme:6,chance:4})">Metkayina — Peuple des Récifs<span class="sub">Nageurs et diplomates. +Charme, +Chance</span></button>
+    `);
+  } else {
+    render(`
+      <div class="eyebrow">Étape 4 / 5</div>
+      <h1 class="title display" style="font-size:26px;">Ta famille</h1>
+      <button class="btn primary" onclick="chooseOrigin('Scientifique',{sagesse:6,harmonie:4})">Famille de scientifiques<span class="sub">+Sagesse, +Harmonie</span></button>
+      <button class="btn primary" onclick="chooseOrigin('Militaire',{force:6,courage:4})">Famille de militaires<span class="sub">+Force, +Courage</span></button>
+      <button class="btn primary" onclick="chooseOrigin('Ordinaire',{chance:6,charme:4})">Famille ordinaire<span class="sub">+Chance, +Charme</span></button>
+    `);
+  }
+}
+function chooseOrigin(label, deltas){
+  creation.originLabel = label; creation.originDeltas = deltas;
+  const suggestion = pick(namePool(creation.species, creation.gender));
+  render(`
+    <div class="eyebrow">Étape 5 / 5</div>
+    <h1 class="title display" style="font-size:26px;">Comment t'appelles-tu ?</h1>
+    <div class="tagline">Laisse ce champ vide si tu n'as pas d'idée, un nom sera choisi pour toi.</div>
+    <div class="inputwrap">
+      <label>Nom du personnage</label>
+      <input type="text" id="nameInput" placeholder="${suggestion}" maxlength="18">
+    </div>
+    <button class="btn primary" onclick="finishCreation()">Commencer →</button>
+  `);
+}
+function finishCreation(){
+  const input = document.getElementById('nameInput');
+  const name = (input && input.value.trim()) ? input.value.trim() : pick(namePool(creation.species, creation.gender));
+  STATE = newState();
+  STATE.name = name;
+  STATE.gender = creation.gender || 'H';
+  STATE.species = creation.species;
+  STATE.originSpecies = creation.species;
+  STATE.tier = creation.tier || 'normal';
+  STATE.flags.clanName = creation.species==='navi' ? creation.originLabel : null;
+  STATE.flags.origine = creation.originLabel;
+  Object.keys(creation.originDeltas).forEach(k=> STATE.stats[k]=clamp(STATE.stats[k]+creation.originDeltas[k]));
+  STATE.maxAge = creation.species==='navi' ? 92 : 80;
+  if(creation.species==='navi'){
+    STATE.script = buildLifeScript(buildNaviTrunk(), 'navi', STATE.tier, 0, STATE.maxAge);
+  } else {
+    STATE.script = buildLifeScript(buildHumanCommon(), 'humain', STATE.tier, 0, 18);
+  }
+  STATE.scriptPos = 0;
+  STATE.age = STATE.script.length ? STATE.script[0].age : 0;
+  _dynCache = {pos:-1, stage:null};
+  pushHistory(STATE, `Naissance parmi ${creation.species==='navi'?"le clan "+creation.originLabel:"une famille "+creation.originLabel.toLowerCase()}.`);
+  saveCurrent();
+  renderStage();
+}
+
+/* ---- Écran de vie / étape ---- */
+function statBar(key){
+  const v = STATE.stats[key];
+  return `<div class="stat"><div class="lbl"><span>${STAT_LABELS[key]}</span><b>${v}</b></div><div class="bar"><i style="width:${v}%"></i></div></div>`;
+}
+function topPanel(){
+  return `
+    <div id="topbar">
+      <span class="badge">${STATE.species==='navi'?"Na'vi":"Humain"}${STATE.flags.origine?" · "+STATE.flags.origine:""}</span>
+      <span class="age-display">${STATE.name}, <b>${STATE.age} ans</b></span>
+    </div>
+    <div class="stats-grid">${STAT_KEYS.map(statBar).join('')}</div>
+  `;
+}
+function journalHtml(){
+  const entries = STATE.history.slice(-40).reverse().map(h=>`<div class="journal-entry"><b>${h.age} ans —</b> ${h.text}</div>`).join('');
+  return `<div class="journal-toggle" onclick="toggleJournal()">📜 Carnet de vie (${STATE.history.length})</div><div class="journal" id="journalBox">${entries}</div>`;
+}
+function toggleJournal(){ document.getElementById('journalBox').classList.toggle('open'); }
+
+/* Étape courante, avec injections dynamiques (amour / devenir Na'vi) mises en cache
+   pour rester stables entre l'affichage et la résolution du choix. */
+function currentStage(){
+  const pos = STATE.scriptPos;
+  if(_dynCache.pos===pos && _dynCache.stage !== undefined){ return _dynCache.stage; }
+  const base = STATE.script[pos];
+  let result = base;
+  if(base && !base.milestone){
+    if(base.generic){
+      result = genericYearStage(STATE, base.age, base.bracket);
+    }
+    const lastLove = STATE.flags.lastLoveAttemptAge || -99;
+    const lastNavi = STATE.flags.lastNaviAttemptAge || -99;
+    if(!STATE.family.married && STATE.flags.seekingLove!==false && base.age>=20 && base.age<=65 && (base.age-lastLove)>=3 && Math.random()<0.22){
+      result = makeLoveRetryStage(STATE, base.age);
+    } else if(STATE.species==='humain' && STATE.flags.a7Attempted && !STATE.flags.devenuNaviDecided && base.age > (STATE.flags.a7Age||999) && (base.age-lastNavi)>=3 && Math.random()<0.22){
+      result = makeBecomeNaviRetryStage(STATE, base.age);
+    }
+  }
+  _dynCache = {pos, stage: result};
+  return result;
+}
+
+
+function recapBlock(){
+  const famLine = STATE.family.married
+    ? `En couple avec <b>${STATE.family.spouseName}</b>${STATE.family.children.length? ' · '+STATE.family.children.length+' enfant(s)':''}`
+    : (STATE.family.children.length? STATE.family.children.length+' enfant(s), célibataire' : "Célibataire pour l'instant");
+  const statLine = STAT_KEYS.map(k=>`${STAT_LABELS[k]} <b style="color:var(--text)">${STATE.stats[k]}</b>`).join(' · ');
+  const pathLine = STATE.flags.archetypeLabel ? `<div class="recap-line">Voie : <b>${STATE.flags.archetypeLabel}</b></div>` : '';
+  return `
+    <div class="recap">
+      <div class="recap-title">Bilan de l'année</div>
+      <div class="recap-line">Âge : <b>${STATE.age} ans</b> (espérance de vie : <b>${STATE.maxAge} ans</b>) · Réputation : <b>${STATE.reputation>=0?'+':''}${STATE.reputation}</b> · Points : <b>${STATE.score}</b></div>
+      <div class="recap-line">${famLine}</div>
+      ${pathLine}
+      <div class="recap-stats">${statLine}</div>
+    </div>
+  `;
+}
+
+function renderStage(){
+  saveCurrent();
+  setSpeciesTheme(STATE.species);
+  if(!STATE.alive){ return renderEnd(); }
+  const stage = currentStage();
+  if(!stage){ return renderEnd(); }
+  if(stage.age > STATE.maxAge){ STATE.age = STATE.maxAge; return renderEnd(); }
+  STATE.age = stage.age;
+  if(stage.auto){ return renderAutoYear(stage); }
+  const text = typeof stage.text==='function' ? stage.text(STATE) : stage.text;
+  const choices = getChoices(stage, STATE);
+  render(`
+    ${topPanel()}
+    <div class="event-text"><span class="stagelabel display">${stage.title}</span>${text}</div>
+    ${choices.map((c,i)=>{
+      const label = typeof c.label==='function'? c.label(STATE): c.label;
+      const pct = c.chance!=null ? `<span class="pct">${c.chance}%</span>` : '';
+      return `<button class="btn" onclick="makeChoice(${i})">${label}${pct}</button>`;
+    }).join('')}
+    ${journalHtml()}
+  `);
+}
+
+function renderAutoYear(stage){
+  const flavor = autoFlavor(STATE);
+  const k = pick(STAT_KEYS); const d = randInt(-1,2);
+  STATE.stats[k] = clamp(STATE.stats[k]+d);
+  STATE.score = Math.round((STATE.score||0) + d);
+  pushHistory(STATE, `${flavor}`);
+  saveCurrent();
+  render(`
+    ${topPanel()}
+    <div class="card center">
+      <div class="small">— une année tranquille —</div>
+      <div style="margin:12px 0; font-size:14.5px; line-height:1.6;">${flavor}</div>
+    </div>
+    ${recapBlock()}
+    <button class="btn primary" onclick="afterChoice()">Continuer →</button>
+    ${journalHtml()}
+  `);
+}
+
+function makeChoice(i){
+  const stage = currentStage();
+  const choices = getChoices(stage, STATE);
+  const choice = choices[i];
+  const result = resolveChoice(STATE, stage, choice);
+  finalizeFamily(STATE);
+  saveCurrent();
+  renderOutcome(stage, result);
+}
+
+function renderOutcome(stage, result){
+  setSpeciesTheme(STATE.species);
+  const deltaPills = Object.keys(result.deltas||{}).map(k=>{
+    const v = result.deltas[k];
+    return `<span class="delta-pill ${v>=0?'pos':'neg'}">${STAT_LABELS[k]} ${v>=0?'+':''}${v}</span>`;
+  }).join('');
+  render(`
+    ${topPanel()}
+    <div class="outcome ${result.success?'':'fail'}">
+      <b>${result.success? '✓ Réussite' : '✗ Échec'}</b><br>${result.text}
+      <div class="deltas">${deltaPills}</div>
+    </div>
+    ${recapBlock()}
+    ${result.dead ? `<button class="btn danger" onclick="renderEnd()">Voir la suite</button>` : `<button class="btn primary" onclick="afterChoice()">Continuer →</button>`}
+    ${journalHtml()}
+  `);
+}
+
+function afterChoice(){
+  STATE.scriptPos++;
+  _dynCache = {pos:-1, stage:null};
+  if(STATE.needsNaviRebuild){
+    STATE.needsNaviRebuild = false;
+    const kept = STATE.script.slice(0, STATE.scriptPos);
+    const rest = buildLifeScript([], 'navi', STATE.tier, STATE.age+1, STATE.maxAge);
+    STATE.script = kept.concat(rest);
+  }
+  if(STATE.scriptPos >= STATE.script.length){
+    if(STATE.species==='humain' && !STATE.flags.branched && STATE.flags.path && STATE.age < STATE.maxAge){
+      STATE.flags.branched = true;
+      const trunk = STATE.flags.path==='avatar'? buildAvatarTrunk() : STATE.flags.path==='militaire'? buildMilitaryTrunk() : buildCivilTrunk();
+      const branchScript = buildLifeScript(trunk, STATE.species, STATE.tier, STATE.age+1, STATE.maxAge);
+      STATE.script = STATE.script.concat(branchScript);
+      return continueScript();
+    }
+    if(STATE.age < STATE.maxAge){
+      const extra = buildLifeScript([], STATE.species, STATE.tier, STATE.age+1, STATE.maxAge);
+      STATE.script = STATE.script.concat(extra);
+      return continueScript();
+    }
+    return renderEnd();
+  }
+  continueScript();
+}
+function continueScript(){
+  if(STATE.scriptPos >= STATE.script.length){ return renderEnd(); }
+  if(STATE.tier==='court'){ return renderTransition(); }
+  renderStage();
+}
+
+function renderTransition(){
+  const flavor = autoFlavor(STATE);
+  const driftKey = pick(STAT_KEYS);
+  const drift = randInt(-1,2);
+  STATE.stats[driftKey] = clamp(STATE.stats[driftKey]+drift);
+  const nextStage = STATE.script[STATE.scriptPos];
+  const nextAge = nextStage ? nextStage.age : STATE.maxAge;
+  render(`
+    ${topPanel()}
+    <div class="card center">
+      <div class="small">— le temps passe —</div>
+      <div style="margin:14px 0; font-size:15px; line-height:1.6;">${flavor}</div>
+      <div class="small">Prochaine étape : ${nextAge} ans</div>
+    </div>
+    <button class="btn primary" onclick="jumpToNextStage(${nextAge})">Continuer →</button>
+  `);
+}
+function jumpToNextStage(age){
+  STATE.age = age;
+  const stage = currentStage();
+  if(!stage){ return renderEnd(); }
+  renderStage();
+}
+
+/* ---- Fin de vie ---- */
+function renderEnd(){
+  setSpeciesTheme(STATE.species);
+  if(STATE.alive){ STATE.age = STATE.maxAge; }
+  finalizeFamily(STATE);
+  const {title, epilogue} = buildTitleAndEpilogue(STATE);
+  unlockTitle(title);
+  const summary = {
+    id: STATE.id, name: STATE.name, gender:STATE.gender, species: STATE.species, age: STATE.age,
+    title, epilogue, stats: {...STATE.stats}, reputation: STATE.reputation, score: STATE.score,
+    family: {...STATE.family}, alive: STATE.alive, savedAt: Date.now(),
+    historyCount: STATE.history.length, tier: STATE.tier
+  };
+  saveMemoire(summary);
+  clearCurrent();
+  render(`
+    <div class="center" style="padding-top:10px;">
+      <div class="eyebrow">${STATE.alive? "Une vie qui touche à sa fin" : "Une vie écourtée"}</div>
+      <div class="epi-title display">${title}</div>
+      <div class="small" style="margin-top:2px;">${STATE.name} — ${STATE.age} ans — ${STATE.species==='navi'?"Na'vi":"Humain"}</div>
+    </div>
+    <div class="hr"></div>
+    <div class="score-banner">Score final<b>${STATE.score}</b></div>
+    <div class="event-text">${epilogue}</div>
+    <div class="stats-grid">${STAT_KEYS.map(statBar).join('')}</div>
+    <div class="hr"></div>
+    ${journalHtml()}
+    <div style="margin-top:18px;">
+      <button class="btn primary" onclick="startLengthSelect()">✦ Recommencer une vie</button>
+      <button class="btn ghost" onclick="renderAchievements()">🏆 Voir tes titres</button>
+      <button class="btn ghost" onclick="renderMemoires()">📖 Voir tes vies passées</button>
+    </div>
+  `);
+  STATE = null;
+}
+
+/* ---- Mémoires ---- */
+function renderMemoires(){
+  setSpeciesTheme('navi');
+  const mem = getMemoires();
+  render(`
+    <div class="eyebrow">Historique</div>
+    <h1 class="title display" style="font-size:26px;">Tes vies passées</h1>
+    <div class="tagline">${mem.length} vie(s) enregistrée(s).</div>
+    ${mem.length===0? `<div class="card center small">Aucune vie enregistrée pour l'instant. Chaque vie terminée apparaît ici.</div>` : ''}
+    ${mem.map(m=>`
+      <div class="mem-card">
+        <span class="del" onclick="event.stopPropagation(); confirmDelete('${m.id}')">supprimer</span>
+        <div class="name display">${m.name}</div>
+        <div class="meta">${m.title} · ${m.age} ans · ${m.species==='navi'?"Na'vi":"Humain"}${m.alive===false?' · † mort(e) prématurément':''} · ${m.score||0} pts</div>
+        <div class="meta">${m.family && m.family.married? "En couple avec "+m.family.spouseName+"." : "Célibataire."} ${m.family && m.family.children && m.family.children.length? m.family.children.length+" enfant(s)." : ""}</div>
+      </div>
+    `).join('')}
+    <button class="btn ghost" onclick="renderTitle()">← Retour</button>
+  `);
+}
+function confirmDelete(id){ if(confirm("Supprimer définitivement cette vie ?")) deleteMemoire(id); }
+
+/* ---- Succès / Profil ---- */
+function renderAchievements(){
+  setSpeciesTheme('navi');
+  const unlocked = getUnlockedTitles();
+  render(`
+    <div class="eyebrow">Ton profil</div>
+    <h1 class="title display" style="font-size:26px;">Titres</h1>
+    <div class="tagline">${Object.keys(unlocked).length} / ${ALL_TITLES.length} débloqués, toutes vies confondues.</div>
+    ${ALL_TITLES.map(t=>{
+      const u = unlocked[t];
+      if(u){
+        return `<div class="mem-card"><span class="cnt">×${u.count}</span><div class="name display">${t}</div><div class="meta">Débloqué</div></div>`;
+      }
+      return `<div class="mem-card locked"><div class="name display">???</div><div class="meta">${TITLE_HINTS[t]||"Continue à jouer pour le découvrir."}</div></div>`;
+    }).join('')}
+    <button class="btn ghost" onclick="renderTitle()">← Retour</button>
+  `);
+}
+
+/* ---- Spores animées ---- */
+function initSpores(){
+  const c = document.getElementById('spores');
+  for(let i=0;i<22;i++){
+    const s = document.createElement('div');
+    s.className='spore';
+    const size = randInt(3,7);
+    s.style.width=size+'px'; s.style.height=size+'px';
+    s.style.left = randInt(0,100)+'%';
+    s.style.setProperty('--dx', randInt(-60,60)+'px');
+    s.style.animationDuration = randInt(14,28)+'s';
+    s.style.animationDelay = randInt(0,20)+'s';
+    c.appendChild(s);
+  }
+}
+
+/* ---- Boot ---- */
+initSpores();
+renderTitle();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>
