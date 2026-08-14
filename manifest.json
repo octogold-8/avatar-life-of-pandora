@@ -1,15 +1,15 @@
 {
   "name": "Avatar: Life of Pandora",
   "short_name": "Avatar",
-  "start_url": "./avatar-life-of-pandora.html",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#060B14",
+  "theme_color": "#060B14",
   "icons": [
     {
-      "src": "./icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "./icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
